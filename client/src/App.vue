@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <HeaderComponent></HeaderComponent>
-    <p>
-      <router-link to="/consult">Consult</router-link>
-    </p>
-    <router-view></router-view>
+    <header-component></header-component>
   </div>
 </template>
 
