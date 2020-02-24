@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <header-component></header-component>
+    <footer-component></footer-component>
   </div>
 </template>
 
 <script>
 import HeaderComponent from "./component/HeaderComponent";
+import FooterComponent from "./component/FooterComponent";
 
 export default {
   name: "app",
   components: {
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   }
 };
 </script>

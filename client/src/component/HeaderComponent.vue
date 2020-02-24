@@ -4,7 +4,7 @@
       <div class="header">
         <img src="../assets/logo.png" alt="patent for you" height="50px" class="left" />
         <p class="left">
-          <router-link to="/consult">咨询入口</router-link>
+          <router-link to="/">主页</router-link>
         </p>
       </div>
     </el-col>
@@ -20,7 +20,8 @@
   img {
     text-align: center;
     vertical-align: middle;
-    padding: 5px;
+    margin-top: 5px;
+    margin-left: 50px;
   }
   p {
     text-align: center;
