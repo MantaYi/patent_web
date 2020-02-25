@@ -20,7 +20,8 @@ export default {
     return {
       textarea: ""
     };
-  }
+  },
+  components: {}
 };
 </script>
 
@@ -28,7 +29,6 @@ export default {
 .consult {
   width: 100%;
   height: 1000px;
-  background-color: #87ceeb;
   > .el-container {
     width: 1000px;
     height: 800px;

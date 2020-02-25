@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <header-component></header-component>
+    <router-view></router-view>
     <footer-component></footer-component>
   </div>
 </template>
@@ -10,7 +11,7 @@ import HeaderComponent from "./component/HeaderComponent";
 import FooterComponent from "./component/FooterComponent";
 
 export default {
-  name: "app",
+  name: "App",
   components: {
     HeaderComponent,
     FooterComponent
@@ -36,6 +37,7 @@ html,
 body {
   width: 100%;
   height: 100%;
+  background-color: #87ceeb;
 }
 ul {
   list-style: none;

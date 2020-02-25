@@ -14,6 +14,24 @@ const routes = [{
     name: "Consult",
     component: () =>
       import("../views/consultViews/Consult.vue")
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () =>
+      import("../views/userViews/Login.vue")
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: () =>
+      import("../views/userViews/Register.vue")
+  },
+  {
+    path: "/space",
+    name: "Space",
+    component: () =>
+      import("../views/userViews/space/Space.vue")
   }
 ];
 
