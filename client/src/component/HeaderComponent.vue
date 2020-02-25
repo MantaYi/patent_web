@@ -3,7 +3,7 @@
     <el-col :span="24">
       <div class="header">
         <img src="../assets/logo.png" alt="patent for you" height="50px" class="left" />
-        <p class="left">
+        <p class="left center">
           <router-link to="/">主页</router-link>
           <router-link to="/news">新闻</router-link>
           <router-link to="/knowledge">知识</router-link>
@@ -28,27 +28,28 @@
   height: 60px;
   background-color: #003472;
   img {
-    text-align: center;
-    vertical-align: middle;
     margin-top: 5px;
-    margin-left: 50px;
   }
   .left {
     float: left;
     margin-left: 50px;
   }
+  .center {
+    width: 800px;
+  }
   .right {
     float: right;
+    width: 200px;
     margin-right: 100px;
   }
   p {
-    text-align: center;
     line-height: 60px;
-    padding-left: 20px;
+    display: flex;
+    justify-content: space-around;
     a {
+      text-align: center;
       display: inline-block;
-      width: 100px;
-
+      margin-right: 20px;
       color: white;
     }
   }
