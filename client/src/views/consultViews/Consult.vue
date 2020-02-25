@@ -28,7 +28,7 @@ export default {
 .consult {
   width: 100%;
   height: 1000px;
-  background-color: skyblue;
+  background-color: #87ceeb;
   > .el-container {
     width: 1000px;
     height: 800px;
@@ -45,7 +45,7 @@ export default {
       height: 800px;
       flex-direction: column;
       .el-header {
-        background-color: wheat;
+        background-color: #f5deb3;
         border-radius: 10px;
         p {
           line-height: 60px;
