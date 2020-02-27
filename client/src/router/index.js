@@ -192,6 +192,12 @@ const routes = [{
     component: () =>
       import("../views/userViews/space/Space.vue"),
     children: [{
+        path: "",
+        name: "MyInfo",
+        component: () =>
+          import("../views/userViews/space/MyInfo.vue")
+      },
+      {
         path: "infoChange",
         name: "InfoChange",
         component: () =>

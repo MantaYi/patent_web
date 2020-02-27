@@ -2,7 +2,12 @@
   <div>
     <el-col :span="24">
       <div class="footer">
-        <img src="../assets/logo_left.png" alt="patent for you" height="80px" class="left" />
+        <img
+          src="../assets/logo_left.png"
+          alt="patent for you"
+          height="80px"
+          class="left"
+        />
         <div class="left">
           <p>
             <span>关于我们</span>
@@ -20,6 +25,7 @@
 <style lang="less" scoped>
 .footer {
   width: 100%;
+  min-width: 1000px;
   height: 100px;
   background-color: #003472;
   display: flex;

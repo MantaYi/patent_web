@@ -1,6 +1,11 @@
 <template>
   <div class="header">
-    <img src="../assets/logo.png" alt="patent for you" height="50px" class="left" />
+    <img
+      src="../assets/logo.png"
+      alt="patent for you"
+      height="50px"
+      class="left"
+    />
     <p class="left center">
       <router-link to="/">主页</router-link>
       <router-link to="/news">新闻</router-link>
@@ -18,12 +23,12 @@
   </div>
 </template>
 
-<script>
-</script>
+<script></script>
 
 <style lang="less" scoped>
 .header {
   width: 100%;
+  min-width: 1000px;
   height: 60px;
   background-color: #003472;
   display: flex;
