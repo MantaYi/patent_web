@@ -22,26 +22,28 @@
   width: 100%;
   height: 100px;
   background-color: #003472;
+  display: flex;
+  justify-content: space-around;
   img {
     text-align: center;
     margin-top: 10px;
     margin-left: 100px;
   }
-  > .left {
-    > p {
-      > span {
+  .left {
+    float: left;
+    p {
+      width: 1000px;
+      display: flex;
+      justify-content: space-around;
+      span {
         display: inline-block;
         height: 50px;
         text-align: center;
-        line-height: 50px;
-        margin-top: 20px;
-        margin-left: 100px;
+        line-height: 20px;
+        margin-top: 40px;
         font-size: 18px;
       }
     }
   }
-}
-.left {
-  float: left;
 }
 </style>
