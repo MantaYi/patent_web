@@ -37,7 +37,7 @@ html,
 body {
   width: 100%;
   height: 100%;
-  background-color: #87ceeb;
+  background-color: #f4f5f7;
 }
 ul {
   list-style: none;

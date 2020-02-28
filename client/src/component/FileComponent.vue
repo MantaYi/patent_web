@@ -38,6 +38,7 @@
     display: flex;
     justify-content: space-around;
     padding-top: 20px;
+    margin-bottom: 20px;
     > p{
       i{
       padding-left: 20px;

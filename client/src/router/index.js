@@ -15,6 +15,12 @@ const routes = [{
     component: () =>
       import("../views/fileViews/File.vue"),
     children: [{
+        path: "",
+        name: "File",
+        component: () =>
+          import("../views/fileViews/File.vue")
+      },
+      {
         path: "details",
         name: "FileDetails",
         component: () =>
@@ -46,11 +52,18 @@ const routes = [{
     component: () =>
       import("../views/knowledgeViews/Knowledge.vue"),
     children: [{
-      path: "details",
-      name: "KnowledgeDetails",
-      component: () =>
-        import("../views/knowledgeViews/KnowledgeDetails.vue")
-    }]
+        path: "",
+        name: "Knowledge",
+        component: () =>
+          import("../views/knowledgeViews/Knowledge.vue")
+      },
+      {
+        path: "details",
+        name: "KnowledgeDetails",
+        component: () =>
+          import("../views/knowledgeViews/KnowledgeDetails.vue")
+      }
+    ]
   },
   {
     path: "/law",
@@ -58,6 +71,11 @@ const routes = [{
     component: () =>
       import("../views/lawViews/Law.vue"),
     children: [{
+      path: "",
+      name: "Law",
+      component: () =>
+        import("../views/lawViews/Law.vue")
+    }, {
       path: "details",
       name: "LawDetails",
       component: () =>
@@ -70,6 +88,11 @@ const routes = [{
     component: () =>
       import("../views/manageViews/Manage.vue"),
     children: [{
+        path: "",
+        name: "Manage",
+        component: () =>
+          import("../views/manageViews/Manage.vue")
+      }, {
         path: "fileChange",
         name: "FileChange",
         component: () =>
@@ -149,6 +172,11 @@ const routes = [{
     component: () =>
       import("../views/newsViews/News.vue"),
     children: [{
+      path: "",
+      name: "News",
+      component: () =>
+        import("../views/newsViews/News.vue")
+    }, {
       path: "details",
       name: "NewsDetails",
       component: () =>
@@ -161,6 +189,11 @@ const routes = [{
     component: () =>
       import("../views/patentViews/Patent.vue"),
     children: [{
+        path: "",
+        name: "Patent",
+        component: () =>
+          import("../views/patentViews/Patent.vue")
+      }, {
         path: "apply",
         name: "PatentApply",
         component: () =>

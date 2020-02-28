@@ -26,6 +26,7 @@
     border-radius: 4px;
     border: 2px solid #003472;
     padding: 20px 20px 0 20px;
+    margin-bottom: 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;

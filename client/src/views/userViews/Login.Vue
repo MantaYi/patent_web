@@ -39,8 +39,7 @@ export default {
       width: 800px;
       height: 600px;
       margin: 0 auto;
-      border: 2px solid #003472;
-      background-color: #87ceeb;
+      background-color: #fff;
       border-radius: 10px;
       p {
         height: 100px;

@@ -7,11 +7,7 @@
           <p>客服咨询 正在连线中</p>
         </el-header>
         <el-main></el-main>
-        <el-input
-          type="textarea"
-          v-model="textarea"
-          placeholder="请在此处输入聊天内容"
-        ></el-input>
+        <el-input type="textarea" v-model="textarea" placeholder="请在此处输入聊天内容"></el-input>
         <el-button type="primary">发送</el-button>
       </el-container>
     </el-container>
@@ -49,7 +45,7 @@ export default {
       height: 800px;
       flex-direction: column;
       .el-header {
-        background-color: #f5deb3;
+        background-color: #fff;
         border-radius: 4px;
         p {
           line-height: 60px;
@@ -58,14 +54,12 @@ export default {
       }
       .el-main {
         background-color: #fff;
-        border: 2px solid #0073ff;
         border-radius: 4px;
         margin-top: 10px;
       }
       .el-textarea__inner {
         height: 160px;
         resize: none;
-        border: 2px solid #0073ff;
         border-radius: 4px;
         margin-top: 10px;
         font-size: 18px;
