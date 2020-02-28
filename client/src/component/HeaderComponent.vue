@@ -23,8 +23,6 @@
   </div>
 </template>
 
-<script></script>
-
 <style lang="less" scoped>
 .header {
   width: 100%;

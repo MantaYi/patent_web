@@ -1,11 +1,16 @@
 <template>
   <div class="myFile">
-    <p>我是文件</p>
+    <file-component></file-component>
   </div>
 </template>
 <script>
+import FileComponent from "../../../component/FileComponent"
+
 export default {
-  name: "MyFile"
+  name: "MyFile",
+  components:{
+    FileComponent
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -16,5 +21,6 @@ export default {
   margin-top: 20px;
   background-color: #fff;
   border-radius: 4px;
+  padding-top: 20px;
 }
 </style>

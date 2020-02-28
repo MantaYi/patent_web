@@ -1,11 +1,16 @@
 <template>
   <div class="myPatent">
-    <p>我是专利</p>
+    <patent-component></patent-component>
   </div>
 </template>
 <script>
+import PatentComponent from "../../../component/PatentComponent"
+
 export default {
-  name: "MyPatent"
+  name: "MyPatent",
+  components: {
+    PatentComponent
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -16,5 +21,6 @@ export default {
   margin-top: 20px;
   background-color: #fff;
   border-radius: 4px;
+  padding-top: 20px;
 }
 </style>

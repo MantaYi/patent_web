@@ -6,7 +6,7 @@
         <span>主页</span>
       </router-link>
       <router-link to="/space/myPatent">
-        <i class="el-icon-s-order"></i>
+        <i class="el-icon-tickets"></i>
         <span>专利</span>
       </router-link>
       <router-link to="/space/myFile">
@@ -36,10 +36,11 @@ export default {
     width: 1000px;
     height: 80px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #ffffff;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     padding-left: 50px;
+    margin-bottom: 20px;
     a {
       display: inline-block;
       width: 100px;
