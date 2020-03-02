@@ -1,11 +1,6 @@
 <template>
   <div class="header">
-    <img
-      src="../assets/logo.png"
-      alt="patent for you"
-      height="50px"
-      class="left"
-    />
+    <img src="../assets/logo.png" alt="patent for you" height="50px" class="left" />
     <p class="left center">
       <router-link to="/">主页</router-link>
       <router-link to="/news">新闻</router-link>
@@ -13,7 +8,7 @@
       <router-link to="/law">法律</router-link>
       <router-link to="/file">文件</router-link>
       <router-link to="/patent">专利</router-link>
-      <router-link to="/apply">专利申请</router-link>
+      <router-link to="/patent/apply">专利申请</router-link>
       <router-link to="/manage">管理</router-link>
     </p>
     <p class="right">

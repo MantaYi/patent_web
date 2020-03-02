@@ -1,5 +1,6 @@
 <template>
-  <div class="patentView">
+  <div>
+    <consult-component></consult-component>
     <patent-component></patent-component>
     <patent-component></patent-component>
     <patent-component></patent-component>
@@ -7,20 +8,15 @@
 </template>
 <script>
 import PatentComponent from "../../component/PatentComponent";
+import ConsultComponent from "../../component/consultComponent/ConsultComponent";
 
 export default {
-  name: "File",
+  name: "Patent",
   components: {
-    PatentComponent
+    PatentComponent,
+    ConsultComponent
   }
 };
 </script>
 <style lang="less" scoped>
-.patentView {
-  width: 1000px;
-  height: 1000px;
-  background-color: #fff;
-  margin: 0 auto;
-  padding-top: 20px;
-}
 </style>

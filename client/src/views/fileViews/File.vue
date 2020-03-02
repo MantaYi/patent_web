@@ -1,5 +1,6 @@
 <template>
-  <div class="fileView">
+  <div>
+    <consult-component></consult-component>
     <file-component></file-component>
     <file-component></file-component>
     <file-component></file-component>
@@ -7,21 +8,14 @@
   </div>
 </template>
 <script>
-import FileComponent from "../../component/FileComponent"
+import FileComponent from "../../component/FileComponent";
+import ConsultComponent from "../../component/consultComponent/ConsultComponent";
 
 export default {
   name: "File",
   components: {
-    FileComponent
+    FileComponent,
+    ConsultComponent
   }
-}
+};
 </script>
-<style lang="less" scoped>
-  .fileView{
-    width: 1000px;
-    height: 1000px;
-    background-color: #fff;
-    margin: 0 auto;
-    padding-top: 20px;
-  }
-</style>

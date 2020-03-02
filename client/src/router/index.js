@@ -13,7 +13,7 @@ const routes = [{
     path: "/file",
     name: "File",
     component: () =>
-      import("../views/fileViews/File.vue"),
+      import("../views/fileViews/FileView.vue"),
     children: [{
         path: "",
         name: "File",
@@ -50,7 +50,7 @@ const routes = [{
     path: "/knowledge",
     name: "Knowledge",
     component: () =>
-      import("../views/knowledgeViews/Knowledge.vue"),
+      import("../views/knowledgeViews/KnowledgeView.vue"),
     children: [{
         path: "",
         name: "Knowledge",
@@ -69,7 +69,7 @@ const routes = [{
     path: "/law",
     name: "Law",
     component: () =>
-      import("../views/lawViews/Law.vue"),
+      import("../views/lawViews/LawView.vue"),
     children: [{
       path: "",
       name: "Law",
@@ -170,7 +170,7 @@ const routes = [{
     path: "/news",
     name: "News",
     component: () =>
-      import("../views/newsViews/News.vue"),
+      import("../views/newsViews/NewsView.vue"),
     children: [{
       path: "",
       name: "News",
@@ -187,7 +187,7 @@ const routes = [{
     path: "/patent",
     name: "Patent",
     component: () =>
-      import("../views/patentViews/Patent.vue"),
+      import("../views/patentViews/PatentView.vue"),
     children: [{
         path: "",
         name: "Patent",
