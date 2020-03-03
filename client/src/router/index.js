@@ -101,6 +101,24 @@ const routes = [{
           import("../views/manageViews/Manage.vue")
       },
       {
+        path: "knowledgeAdd",
+        name: "knowledgeAdd",
+        component: () =>
+          import("../views/manageViews/addViews/KnowledgeAdd.vue")
+      },
+      {
+        path: "lawAdd",
+        name: "lawAdd",
+        component: () =>
+          import("../views/manageViews/addViews/LawAdd.vue")
+      },
+      {
+        path: "newsAdd",
+        name: "newsAdd",
+        component: () =>
+          import("../views/manageViews/addViews/NewsAdd.vue")
+      },
+      {
         path: "fileChange",
         name: "FileChange",
         component: () =>
