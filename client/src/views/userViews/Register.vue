@@ -3,20 +3,20 @@
     <el-col>
       <p>注册</p>
     </el-col>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="用户名称">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="用户名称" prop="username">
         <el-input v-model="form.username" clearable></el-input>
       </el-form-item>
-      <el-form-item label="用户密码">
-        <el-input v-model="form.password" show-password></el-input>
+      <el-form-item label="用户密码" prop="password">
+        <el-input v-model="form.password" clearable show-password></el-input>
       </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="form.passwordAg" show-password></el-input>
+      <el-form-item label="确认密码" prop="passwordAg">
+        <el-input v-model="form.passwordAg" clearable show-password></el-input>
       </el-form-item>
-      <el-form-item label="用户邮箱">
+      <el-form-item label="用户邮箱" prop="userEmail">
         <el-input v-model="form.userEmail"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码">
+      <el-form-item label="手机号码" prop="userPhone">
         <el-input v-model="form.userPhone"></el-input>
       </el-form-item>
       <el-form-item>
@@ -36,6 +36,13 @@ export default {
         passwordAg: "",
         userEmail: "",
         userPhone: ""
+      },
+      rules: {
+        username: [{ required: true, message: "请输入", trigger: "blur" }],
+        password: [{ required: true, message: "请输入", trigger: "blur" }],
+        passwordAg: [{ required: true, message: "请输入", trigger: "blur" }],
+        userEmail: [{ required: true, message: "请输入", trigger: "blur" }],
+        userPhone: [{ required: true, message: "请输入", trigger: "blur" }]
       }
     };
   }

@@ -4,8 +4,17 @@
       <el-row>
         <el-col :span="24">
           <p>登陆</p>
-          <el-input placeholder="请输入用户名" v-model="username" clearable></el-input>
-          <el-input type="password" placeholder="请输入密码" v-model="password" clearable></el-input>
+          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+            <el-input placeholder="请输入用户名" v-model="form.username" clearable prop="username"></el-input>
+            <el-input
+              type="password"
+              placeholder="请输入密码"
+              v-model="form.password"
+              clearable
+              show-password
+              prop="password"
+            ></el-input>
+          </el-form>
         </el-col>
         <el-col>
           <p>
@@ -22,8 +31,14 @@ export default {
   name: "Login",
   data() {
     return {
-      username: "",
-      password: ""
+      form: {
+        username: "",
+        password: ""
+      },
+      rules: {
+        username: [{ required: true, message: "请输入", trigger: "blur" }],
+        password: [{ required: true, message: "请输入", trigger: "blur" }]
+      }
     };
   }
 };
@@ -40,6 +55,7 @@ export default {
       height: 600px;
       margin: 0 auto;
       background-color: #fff;
+      padding-top: 20px;
       border-radius: 10px;
       p {
         height: 100px;
@@ -48,13 +64,15 @@ export default {
       }
       .el-col {
         &:first-of-type {
-          height: 400px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-around;
-          .el-input {
-            width: 500px;
-            margin: 0 auto;
+          .el-form {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            .el-input {
+              width: 500px;
+              margin: 0 auto;
+            }
           }
         }
         &:last-of-type {
@@ -68,7 +86,7 @@ export default {
           .el-button {
             display: block;
             width: 100px;
-            height: 50px;
+            height: 40px;
             margin: 0 auto;
           }
         }

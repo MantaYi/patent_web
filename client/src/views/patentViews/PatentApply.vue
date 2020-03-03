@@ -1,24 +1,24 @@
 <template>
   <div class="apply">
     <p>专利申请</p>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="专利名称">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="专利名称" prop="patentName">
         <el-input v-model="form.patentName" clearable></el-input>
       </el-form-item>
-      <el-form-item label="专利描述">
+      <el-form-item label="专利描述" prop="patentContent">
         <el-input type="textarea" v-model="form.patentContent" :rows="5" placeholder="请输入内容"></el-input>
       </el-form-item>
-      <el-form-item label="地址">
+      <el-form-item label="地址" prop="patentApplicationLocation">
         <el-input v-model="form.patentApplicationLocation" clearable></el-input>
       </el-form-item>
-      <el-form-item label="专利类型">
+      <el-form-item label="专利类型" prop="patentType">
         <el-radio-group v-model="form.patentType">
           <el-radio-button v-model="form.patentType" label="发明专利"></el-radio-button>
           <el-radio-button v-model="form.patentType" label="实用新型专利"></el-radio-button>
           <el-radio-button v-model="form.patentType" label="外观设计专利"></el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="专利领域">
+      <el-form-item label="专利领域" prop="patentArea">
         <el-select v-model="form.patentArea" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -50,6 +50,15 @@ export default {
         patentFile: "",
         patentType: 0,
         patentArea: ""
+      },
+      rules: {
+        patentName: [{ required: true, message: "请输入", trigger: "blur" }],
+        patentContent: [{ required: true, message: "请输入", trigger: "blur" }],
+        patentApplicationLocation: [
+          { required: true, message: "请输入", trigger: "blur" }
+        ],
+        patentType: [{ required: true, message: "请输入", trigger: "blur" }],
+        patentArea: [{ required: true, message: "请输入", trigger: "blur" }]
       },
       fileList: [],
       options: [

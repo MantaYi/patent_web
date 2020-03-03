@@ -8,7 +8,6 @@
       <router-link to="/law">法律</router-link>
       <router-link to="/file">文件</router-link>
       <router-link to="/patent">专利</router-link>
-      <router-link to="/patent/apply">专利申请</router-link>
       <router-link to="/manage">管理</router-link>
     </p>
     <p class="right">
