@@ -37,6 +37,7 @@ export default {
     .el-aside {
       height: 800px;
       background-color: #fff;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       border-radius: 4px;
     }
     > .el-container {
@@ -46,6 +47,7 @@ export default {
       flex-direction: column;
       .el-header {
         background-color: #fff;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         p {
           line-height: 60px;
@@ -54,6 +56,7 @@ export default {
       }
       .el-main {
         background-color: #fff;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         margin-top: 10px;
       }
@@ -63,6 +66,7 @@ export default {
         border-radius: 4px;
         margin-top: 10px;
         font-size: 18px;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       }
       .el-button {
         width: 100px;

@@ -1,15 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+// 路由实例化
 Vue.use(VueRouter);
 
 const routes = [{
+    // 咨询页面路由
     path: "/consult",
     name: "Consult",
     component: () =>
       import("../views/consultViews/Consult.vue")
   },
   {
+    // 文件相关路由
     path: "/file",
     name: "File",
     component: () =>
@@ -41,12 +44,14 @@ const routes = [{
     ]
   },
   {
+    // 主页路由
     path: "/",
     name: "Home",
     component: () =>
       import("../views/homeViews/Home.vue")
   },
   {
+    // 专利知识相关路由
     path: "/knowledge",
     name: "Knowledge",
     component: () =>
@@ -66,6 +71,7 @@ const routes = [{
     ]
   },
   {
+    // 法律法规相关路由
     path: "/law",
     name: "Law",
     component: () =>
@@ -83,16 +89,18 @@ const routes = [{
     }]
   },
   {
+    // 管理相关路由
     path: "/manage",
     name: "Manage",
     component: () =>
-      import("../views/manageViews/Manage.vue"),
+      import("../views/manageViews/ManageView.vue"),
     children: [{
         path: "",
         name: "Manage",
         component: () =>
           import("../views/manageViews/Manage.vue")
-      }, {
+      },
+      {
         path: "fileChange",
         name: "FileChange",
         component: () =>
@@ -167,6 +175,7 @@ const routes = [{
     ]
   },
   {
+    // 新闻相关路由
     path: "/news",
     name: "News",
     component: () =>
@@ -184,6 +193,7 @@ const routes = [{
     }]
   },
   {
+    // 专利相关路由 
     path: "/patent",
     name: "Patent",
     component: () =>
@@ -208,18 +218,21 @@ const routes = [{
     ]
   },
   {
+    // 登录路由
     path: "/login",
     name: "Login",
     component: () =>
       import("../views/userViews/Login.vue")
   },
   {
+    // 注册路由
     path: "/register",
     name: "Register",
     component: () =>
       import("../views/userViews/Register.vue")
   },
   {
+    // 空间路由
     path: "/space",
     name: "Space",
     component: () =>
@@ -259,6 +272,7 @@ const routes = [{
 ];
 
 const router = new VueRouter({
+  //更改为history模式，消除哈希模式的#号
   mode: 'history',
   routes
 });

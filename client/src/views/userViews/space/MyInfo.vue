@@ -21,9 +21,10 @@ export default {
   width: 1000px;
   margin: 0 auto;
   background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding-top: 40px;
-  p{
+  p {
     width: 500px;
     height: 100px;
     margin: 0 auto;

@@ -4,11 +4,11 @@
   </div>
 </template>
 <script>
-import FileComponent from "../../../component/FileComponent"
+import FileComponent from "../../../component/FileComponent";
 
 export default {
   name: "MyFile",
-  components:{
+  components: {
     FileComponent
   }
 };
@@ -20,6 +20,7 @@ export default {
   margin: 0 auto;
   margin-top: 20px;
   background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding-top: 20px;
 }

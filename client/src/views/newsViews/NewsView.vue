@@ -14,6 +14,7 @@ export default {
   min-height: 1000px;
   margin: 0 auto;
   background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding-top: 20px;
   padding-bottom: 20px;
 }

@@ -62,6 +62,7 @@ export default {
   height: 700px;
   margin: 0 auto;
   background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   .el-col {
     p {
