@@ -67,7 +67,7 @@
 <style lang="less" scoped>
 .manageView {
   width: 1400px;
-  height: 600px;
+  min-height: 600px;
   background-color: #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   margin: 20px auto;
@@ -78,12 +78,13 @@
     color: rgb(0, 238, 255);
     text-align: center;
     line-height: 60px;
+    margin-bottom: 20px;
   }
   .el-aside {
-    height: 600px;
+    min-height: 600px;
     background-color: #fff;
     .el-menu {
-      height: 600px;
+      min-height: 600px;
     }
   }
 }

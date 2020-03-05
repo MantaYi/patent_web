@@ -1,5 +1,4 @@
 <template>
-  <router-link to="/file/details">
     <div class="file">
       <p>
         <i class="el-icon-document"></i>
@@ -28,7 +27,6 @@
         <el-button type="danger" @click="inform">举报文件</el-button>
       </p>
     </div>
-  </router-link>
 </template>
 <style lang="less" scoped>
 a {

@@ -1,18 +1,16 @@
 <template>
-  <router-link to="/law/details">
-    <div class="law">
-      <div>
-        <span>相关领域：</span>
-        <span>相关专利类型：</span>
-      </div>
-      <div>
-        <p>政策法规内容：</p>
-      </div>
-      <div>
-        <p>政策法规出处</p>
-      </div>
+  <div class="law">
+    <div>
+      <span>相关领域：</span>
+      <span>相关专利类型：</span>
     </div>
-  </router-link>
+    <div>
+      <p>政策法规内容：</p>
+    </div>
+    <div>
+      <p>政策法规出处</p>
+    </div>
+  </div>
 </template>
 <style lang="less" scoped>
 a {

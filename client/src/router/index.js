@@ -24,12 +24,6 @@ const routes = [{
           import("../views/fileViews/File.vue")
       },
       {
-        path: "details",
-        name: "FileDetails",
-        component: () =>
-          import("../views/fileViews/FileDetails.vue")
-      },
-      {
         path: "download",
         name: "FileDownload",
         component: () =>
@@ -81,11 +75,6 @@ const routes = [{
       name: "Law",
       component: () =>
         import("../views/lawViews/Law.vue")
-    }, {
-      path: "details",
-      name: "LawDetails",
-      component: () =>
-        import("../views/lawViews/LawDetails.vue")
     }]
   },
   {
