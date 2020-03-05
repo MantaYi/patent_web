@@ -1,8 +1,10 @@
 <template>
   <div class="file">
     <span>新闻标题</span>
-    <el-button type="warning" round>新闻修改</el-button>
-    <el-button type="danger" round>新闻删除</el-button>
+    <el-button-group>
+      <el-button type="primary" icon="el-icon-edit"></el-button>
+      <el-button type="primary" icon="el-icon-delete"></el-button>
+    </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
@@ -18,9 +20,8 @@
     line-height: 40px;
     margin: 0 10px;
   }
-  .el-button {
+  .el-button-group {
     float: right;
-    margin: 0 10px;
   }
 }
 </style>

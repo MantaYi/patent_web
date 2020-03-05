@@ -1,6 +1,7 @@
 <template>
   <div>
     <file-component></file-component>
+    <el-pagination background layout="prev, pager, next" :total="100"></el-pagination>
   </div>
 </template>
 <script>

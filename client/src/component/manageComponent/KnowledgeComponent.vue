@@ -1,12 +1,16 @@
 <template>
-  <div class="file">
+  <div class="knowledge">
     <span>专利知识标题</span>
-    <el-button type="warning" round>知识修改</el-button>
-    <el-button type="danger" round>知识删除</el-button>
+    <el-button-group>
+      <router-link to="/manage/knowledgeChange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <el-button type="primary" icon="el-icon-delete"></el-button>
+    </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
-.file {
+.knowledge {
   width: 1000px;
   height: 50px;
   padding: 5px 50px 0px 50px;
@@ -18,9 +22,8 @@
     line-height: 40px;
     margin: 0 10px;
   }
-  .el-button {
+  .el-button-group {
     float: right;
-    margin: 0 10px;
   }
 }
 </style>

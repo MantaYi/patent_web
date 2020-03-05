@@ -2,9 +2,11 @@
   <div class="file">
     <span>专利标题</span>
     <span>专利状态</span>
-    <el-button type="success" round>进入下一阶段</el-button>
-    <el-button type="warning" round>专利修改</el-button>
-    <el-button type="danger" round>专利删除</el-button>
+    <el-button-group>
+      <el-button type="primary" icon="el-icon-edit"></el-button>
+      <el-button type="primary" icon="el-icon-delete"></el-button>
+      <el-button type="primary" icon="el-icon-arrow-right"></el-button>
+    </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
@@ -20,9 +22,8 @@
     line-height: 40px;
     margin: 0 10px;
   }
-  .el-button {
+  .el-button-group {
     float: right;
-    margin: 0 10px;
   }
 }
 </style>

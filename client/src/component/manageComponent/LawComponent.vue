@@ -1,8 +1,12 @@
 <template>
   <div class="file">
     <span>法律法规标题</span>
-    <el-button type="warning" round>法规修改</el-button>
-    <el-button type="danger" round>法规删除</el-button>
+    <el-button-group>
+      <router-link to="/manage/lawChange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <el-button type="primary" icon="el-icon-delete"></el-button>
+    </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
@@ -18,9 +22,8 @@
     line-height: 40px;
     margin: 0 10px;
   }
-  .el-button {
+  .el-button-group {
     float: right;
-    margin: 0 10px;
   }
 }
 </style>

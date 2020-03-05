@@ -4,8 +4,12 @@
     <span>文件购买次数</span>
     <span>文件下载次数</span>
     <span>文件举报次数</span>
-    <el-button type="warning" round>文件修改</el-button>
-    <el-button type="danger" round>文件删除</el-button>
+    <el-button-group>
+      <router-link to="/manage/filechange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <el-button type="primary" icon="el-icon-delete"></el-button>
+    </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
@@ -21,9 +25,8 @@
     line-height: 40px;
     margin: 0 10px;
   }
-  .el-button {
+  .el-button-group {
     float: right;
-    margin: 0 10px;
   }
 }
 </style>
