@@ -7,8 +7,8 @@
       <el-form-item label="知识内容">
         <el-input type="textarea" v-model="form.knowledgeContent"></el-input>
       </el-form-item>
-      <el-form-item label="相关领域" prop="patentArea">
-        <el-select v-model="form.patentArea" placeholder="请选择">
+      <el-form-item label="相关领域" prop="knowledgeArea">
+        <el-select v-model="form.knowledgeArea" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -31,7 +31,7 @@ export default {
       form: {
         knowledgeHeadline: "",
         knowledgeContent: "",
-        patentArea: ""
+        knowledgeArea: ""
       },
       options: [
         {

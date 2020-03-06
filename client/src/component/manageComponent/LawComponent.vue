@@ -1,16 +1,18 @@
 <template>
-  <div class="file">
+  <div class="law">
     <span>法律法规标题</span>
     <el-button-group>
       <router-link to="/manage/lawChange">
         <el-button type="primary" icon="el-icon-edit"></el-button>
       </router-link>
-      <el-button type="primary" icon="el-icon-delete"></el-button>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-delete"></el-button>
+      </a>
     </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
-.file {
+.law {
   width: 1000px;
   height: 50px;
   padding: 5px 50px 0px 50px;

@@ -1,16 +1,22 @@
 <template>
-  <div class="file">
+  <div class="patent">
     <span>专利标题</span>
     <span>专利状态</span>
     <el-button-group>
-      <el-button type="primary" icon="el-icon-edit"></el-button>
-      <el-button type="primary" icon="el-icon-delete"></el-button>
-      <el-button type="primary" icon="el-icon-arrow-right"></el-button>
+      <router-link to="/manage/patentChange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-delete"></el-button>
+      </a>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-arrow-right"></el-button>
+      </a>
     </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
-.file {
+.patent {
   width: 1000px;
   height: 50px;
   padding: 5px 50px 0px 50px;

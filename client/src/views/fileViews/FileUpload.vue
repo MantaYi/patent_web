@@ -24,14 +24,14 @@
         <el-input v-model="form.filePrice"></el-input>
       </el-form-item>
       <el-form-item label="专利类型" prop="filePatentType">
-        <el-radio-group v-model="form.patentType">
-          <el-radio-button v-model="form.patentType" label="发明专利"></el-radio-button>
-          <el-radio-button v-model="form.patentType" label="实用新型专利"></el-radio-button>
-          <el-radio-button v-model="form.patentType" label="外观设计专利"></el-radio-button>
+        <el-radio-group v-model="form.filePatentType">
+          <el-radio-button v-model="form.filePatentType" label="发明专利"></el-radio-button>
+          <el-radio-button v-model="form.filePatentType" label="实用新型专利"></el-radio-button>
+          <el-radio-button v-model="form.filePatentType" label="外观设计专利"></el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="专利领域" prop="patentArea">
-        <el-select v-model="form.patentArea" placeholder="请选择">
+      <el-form-item label="专利领域" prop="fileArea">
+        <el-select v-model="form.fileArea" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -52,7 +52,12 @@ export default {
   data() {
     return {
       fileList: [],
-      form: {},
+      form: {
+        fileName: "",
+        filePrice: "",
+        filePatentType: "",
+        fileArea: ""
+      },
       options: [
         {
           value: "A",

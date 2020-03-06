@@ -1,14 +1,18 @@
 <template>
-  <div class="file">
+  <div class="news">
     <span>新闻标题</span>
     <el-button-group>
-      <el-button type="primary" icon="el-icon-edit"></el-button>
-      <el-button type="primary" icon="el-icon-delete"></el-button>
+      <router-link to="/manage/newsChange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-delete"></el-button>
+      </a>
     </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
-.file {
+.news {
   width: 1000px;
   height: 50px;
   padding: 5px 50px 0px 50px;

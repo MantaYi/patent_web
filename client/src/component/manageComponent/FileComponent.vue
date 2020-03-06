@@ -8,7 +8,9 @@
       <router-link to="/manage/filechange">
         <el-button type="primary" icon="el-icon-edit"></el-button>
       </router-link>
-      <el-button type="primary" icon="el-icon-delete"></el-button>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-delete"></el-button>
+      </a>
     </el-button-group>
   </div>
 </template>

@@ -1,14 +1,18 @@
 <template>
-  <div class="file">
+  <div class="user">
     <span>用户名称</span>
     <el-button-group>
-      <el-button type="primary" icon="el-icon-edit"></el-button>
-      <el-button type="primary" icon="el-icon-delete"></el-button>
+      <router-link to="/manage/userChange">
+        <el-button type="primary" icon="el-icon-edit"></el-button>
+      </router-link>
+      <a href="javascript:">
+        <el-button type="primary" icon="el-icon-delete"></el-button>
+      </a>
     </el-button-group>
   </div>
 </template>
 <style lang="less" scoped>
-.file {
+.user {
   width: 1000px;
   height: 50px;
   padding: 5px 50px 0px 50px;

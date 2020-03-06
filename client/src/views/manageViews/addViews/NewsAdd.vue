@@ -7,8 +7,8 @@
       <el-form-item label="新闻内容">
         <el-input type="textarea" v-model="form.newsContent"></el-input>
       </el-form-item>
-      <el-form-item label="相关领域" prop="patentArea">
-        <el-select v-model="form.patentArea" placeholder="请选择">
+      <el-form-item label="相关领域" prop="newsPatentArea">
+        <el-select v-model="form.newsPatentArea" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -40,7 +40,7 @@ export default {
       form: {
         newsHeadline: "",
         newsContent: "",
-        patentArea: "",
+        newsPatentArea: "",
         newsDate: ""
       },
       options: [
