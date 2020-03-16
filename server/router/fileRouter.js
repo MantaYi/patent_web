@@ -1,6 +1,5 @@
 const express = require("express"); //引入express模块，用于接口编写
 const multer = require("multer"); //引入multer模块，用于文件上传
-const fs = require("fs"); //直接引入文件系统模块
 
 let storage = multer.diskStorage({
   //文件存储路径
