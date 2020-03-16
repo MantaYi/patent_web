@@ -1,43 +1,37 @@
-//引用express
-const express = require('express')
-//引入multer
-const multer = require('multer')
+const express = require("express"); //引入express模块，用于接口编写
+const multer = require("multer"); //引入multer模块，用于文件上传
+const fs = require("fs"); //直接引入文件系统模块
 
-//实例化路由
-const router = express.Router()
-//multer配置
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
+  //文件存储路径
   destination: function (req, file, cb) {
-    //指定文件路径
-    cb(null, './static/img')
+    cb(null, "./upload");
   },
   filename: function (req, file, cb) {
-    //指定文件名
-    //获取数据
-    let exts = file.originalname.split('.')
-    let ext = exts[exts.length - 1]
-    let tmpName = (new Date()).getTime() + (parseInt(Math.random() * 9999) + '')
-    cb(null, `${tmpName}.${ext}`)
+    let ifo = file.originalname.split(".");
+    let fileLast = ifo[ifo.length - 1];
+    let fileName = new Date().getTime() + (parseInt(Math.random() * 9999) + "");
+    cb(null, `${fileName}.${fileLast}`);
   }
-})
-var upload = multer({
-  storage: storage
-})
+});
+let upload = multer({
+  storage
+});
+//实例化路由
+const router = express.Router();
 
-//上传图片
-//上传图片和一些比较大的文件时必须用post方法
-router.post('/upload', upload.single('file'), (req, res) => {
-  //file 表示要上传的图片数据的key值 必须前后端保持一致
-  //获取数据
+//单文件上传
+router.post("/upload", upload.single("file"), function (req, res, next) {
+  console.log(req.file)
   let {
     size,
-    mimeType,
+    mimetype,
     path
   } = req.file
-  //定义允许上传的数据类型
-  let types = ['jpg', 'jpeg', 'png', 'gif']
-  //使用split函数提取出文件的类型/后缀名
-  let tmpType = mimeType.split('/')[1]
+  //定义允许上传的文件类型
+  let types = ['jpg', 'jpeg', 'png', 'gif', 'docx', 'pdf']
+  //提取文件后缀
+  let tmpType = mimetype.split('/')[1]
   if (size > 500000) {
     return res.send({
       err: -1,
@@ -46,7 +40,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
   } else if (types.indexOf(tmpType) == -1) {
     return res.send({
       err: -2,
-      msg: '媒体类型错误'
+      msg: '不合规范的文件类型'
     })
   } else {
     let url = `/public/img/${req.file.filename}`
@@ -56,8 +50,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
       img: url
     })
   }
-})
-
+});
 
 //路由导出
-module.exports = router
+module.exports = router;
