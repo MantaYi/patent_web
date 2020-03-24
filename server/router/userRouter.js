@@ -13,8 +13,6 @@ router.post('/reg', (req, res) => {
     userName,
     password
   } = req.body;
-  console.log(userName);
-  console.log(password);
   //判断用户名是否存在
   User.find({
       userName

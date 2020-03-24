@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 //引入cors插件解决跨域问题
 const cors = require('cors');
 //请求request模块，request模块是对http/https模块的封装
-const request = require('request');
+// const request = require('request');
 //引入express-session插件
 const session = require('express-session');
 //引入用户路由
