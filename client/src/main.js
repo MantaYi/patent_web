@@ -4,8 +4,14 @@ import App from "./App.vue";
 import router from "./router";
 //引入Element-UI配置文件
 import "./plugins/element.js";
+//引入axios
+import axios from 'axios';
 
 Vue.config.productionTip = false;
+Vue.prototype.$http = axios;
+
+//axios配置
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 //进入下一个页面后自动跳转到页面顶部
 router.afterEach((to, from, next) => {
