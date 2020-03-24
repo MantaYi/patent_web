@@ -2,10 +2,8 @@
   <div class="header">
     <img src="../assets/logo.png" alt="patent for you" height="50px" />
     <el-menu
-      :default-active="activeIndex2"
       class="el-menu-demo header-nav"
       mode="horizontal"
-      @select="handleSelect"
       background-color="#003472"
       text-color="#fff"
       active-text-color="#ffd04b"

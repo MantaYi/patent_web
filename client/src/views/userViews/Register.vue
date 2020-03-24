@@ -4,7 +4,7 @@
       <p>注册</p>
     </el-col>
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="用户名称" prop="username">
+      <el-form-item label="用户名称" prop="userName">
         <el-input v-model="form.username" clearable></el-input>
       </el-form-item>
       <el-form-item label="用户密码" prop="password">
@@ -31,20 +31,23 @@ export default {
   data() {
     return {
       form: {
-        username: "",
+        userName: "",
         password: "",
         passwordAg: "",
         userEmail: "",
         userPhone: ""
       },
       rules: {
-        username: [{ required: true, message: "请输入", trigger: "blur" }],
+        userName: [{ required: true, message: "请输入", trigger: "blur" }],
         password: [{ required: true, message: "请输入", trigger: "blur" }],
         passwordAg: [{ required: true, message: "请输入", trigger: "blur" }],
-        userEmail: [{ required: true, message: "请输入", trigger: "blur" }],
-        userPhone: [{ required: true, message: "请输入", trigger: "blur" }]
+        userEmail: [{ required: false, message: "请输入", trigger: "blur" }],
+        userPhone: [{ required: false, message: "请输入", trigger: "blur" }]
       }
     };
+  },
+  methods: {
+    onSubmit() {}
   }
 };
 </script>

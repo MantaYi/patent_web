@@ -14,7 +14,6 @@ const routes = [{
   {
     // 文件相关路由
     path: "/file",
-    name: "File",
     component: () =>
       import("../views/fileViews/FileView.vue"),
     children: [{
@@ -39,7 +38,7 @@ const routes = [{
   },
   {
     // 主页路由
-    path: "/",
+    path: "",
     name: "Home",
     component: () =>
       import("../views/homeViews/Home.vue")
@@ -47,7 +46,6 @@ const routes = [{
   {
     // 专利知识相关路由
     path: "/knowledge",
-    name: "Knowledge",
     component: () =>
       import("../views/knowledgeViews/KnowledgeView.vue"),
     children: [{
@@ -67,7 +65,6 @@ const routes = [{
   {
     // 法律法规相关路由
     path: "/law",
-    name: "Law",
     component: () =>
       import("../views/lawViews/LawView.vue"),
     children: [{
@@ -80,7 +77,6 @@ const routes = [{
   {
     // 管理相关路由
     path: "/manage",
-    name: "Manage",
     component: () =>
       import("../views/manageViews/ManageView.vue"),
     children: [{
@@ -184,7 +180,6 @@ const routes = [{
   {
     // 新闻相关路由
     path: "/news",
-    name: "News",
     component: () =>
       import("../views/newsViews/NewsView.vue"),
     children: [{
@@ -202,7 +197,6 @@ const routes = [{
   {
     // 专利相关路由 
     path: "/patent",
-    name: "Patent",
     component: () =>
       import("../views/patentViews/PatentView.vue"),
     children: [{
@@ -241,7 +235,6 @@ const routes = [{
   {
     // 空间路由
     path: "/space",
-    name: "Space",
     component: () =>
       import("../views/userViews/space/Space.vue"),
     children: [{
@@ -261,12 +254,6 @@ const routes = [{
         name: "MyFile",
         component: () =>
           import("../views/userViews/space/MyFile.vue")
-      },
-      {
-        path: "myInfo",
-        name: "MyInfo",
-        component: () =>
-          import("../views/userViews/space/MyInfo.vue")
       },
       {
         path: "myPatent",

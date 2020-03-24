@@ -107,6 +107,9 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    onSubmit() {}
   }
 };
 </script>
