@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import qs from "qs";
 export default {
   name: "Login",
   data() {
@@ -41,15 +42,33 @@ export default {
       } else if (this.form.password == "") {
         console.log("密码不能为空");
       } else {
-        this.$http
-          .post("localhost:3000/user/login", {
-            userName: this.form.userName,
-            password: this.form.password
+        let url = "http://localhost:3000/user/login";
+        let data = {
+          userName: this.form.userName,
+          password: this.form.password
+        };
+        this.$http({
+          method: "post",
+          url,
+          data: qs.stringify(data)
+        })
+          .then(res => {
+            let PFULog = res.data;
+            if (PFULog.err == 0) {
+              //登录成功的处理
+              this.$router.push({ name: "/" });
+            } else if (PFULog.err == -1) {
+              //用户名错误处理
+              console.error(PFULog.msg);
+            } else if (PFULog.err == -2) {
+              //密码错误处理
+              console.log(PFULog.msg);
+            } else {
+              //服务器错误处理
+              console.log(PFULog.msg);
+            }
           })
-          .then(() => {
-            this.$router.push({ path: "" });
-          })
-          .catch(err => console.log(err));
+          .catch(err => console.log(err)); //请求失败处理
       }
     }
   }

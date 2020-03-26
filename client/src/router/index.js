@@ -39,7 +39,7 @@ const routes = [{
   {
     // 主页路由
     path: "",
-    name: "Home",
+    name: "/",
     component: () =>
       import("../views/homeViews/Home.vue")
   },
