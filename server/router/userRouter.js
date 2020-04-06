@@ -43,42 +43,48 @@ router.post('/reg', (req, res) => {
 
 //登录逻辑
 router.post('/login', (req, res) => {
-  //获取数据
-  let {
-    userName,
-    password
-  } = req.body;
-  User.find({
+  if (req.session.login == true) {
+    console.log(req.session);
+    console.log('已登录');
+    res.send(req.session.name);
+  } else {
+    //获取数据
+    let {
       userName,
       password
-    })
-    .then(data => {
-      if (data.length == 0) {
-        res.send({
-          err: -1,
-          msg: '用户名不存在'
-        });
-      } else if (data.length == 1) {
-        if (data[0].userName == userName && data[0].password == password) {
-          //登录成功后将用户的相关信息存到session
-          req.session.login = true;
-          req.session.name = userName;
+    } = req.body;
+    User.find({
+        userName,
+        password
+      })
+      .then(data => {
+        if (data.length == 0) {
           res.send({
-            err: 0,
-            msg: '登录成功'
+            err: -1,
+            msg: '用户名不存在'
           });
-        } else {
-          res.send({
-            err: -2,
-            msg: '密码不正确'
-          });
+        } else if (data.length == 1) {
+          if (data[0].userName == userName && data[0].password == password) {
+            //登录成功后将用户的相关信息存到session
+            req.session.login = true;
+            req.session.name = userName;
+            res.send({
+              err: 0,
+              msg: '登录成功'
+            });
+          } else {
+            res.send({
+              err: -2,
+              msg: '密码不正确'
+            });
+          }
         }
-      }
-    })
-    .catch(err => res.send({
-      err: -99,
-      msg: '服务器出错'
-    }))
+      })
+      .catch(err => res.send({
+        err: -99,
+        msg: '服务器出错'
+      }))
+  }
 });
 
 //登出逻辑

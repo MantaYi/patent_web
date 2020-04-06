@@ -53,6 +53,7 @@ export default {
           data: qs.stringify(data)
         })
           .then(res => {
+            console.log(res);
             let PFULog = res.data;
             if (PFULog.err == 0) {
               //登录成功的处理
