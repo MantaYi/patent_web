@@ -1,5 +1,7 @@
 //引入express
 const express = require('express');
+//引入http模块
+const http = require('http');
 //引入用户模型
 const User = require('../db/model/userModel');
 
@@ -68,6 +70,9 @@ router.post('/login', (req, res) => {
             //登录成功后将用户的相关信息存到session
             req.session.login = true;
             req.session.name = userName;
+            console.log(req.headers.cookie);
+            res.setHeader('Set-Cookie', `session=${req.sessionID};httpOnly;expires=${getExpireTime()}`);
+            console.log(req.headers.cookie);
             res.send({
               err: 0,
               msg: '登录成功'
