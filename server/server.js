@@ -8,10 +8,6 @@ const cors = require('cors');
 // const request = require('request');
 //引入cookieParser中间件
 const cookieParser = require('cookie-parser');
-//引入express-session中间件
-const session = require('express-session');
-//引入connect-mongo
-const MongoStore = require('connect-mongo')(session);
 //引入用户路由
 const userRouter = require('./router/userRouter');
 //引入文件路由
@@ -32,21 +28,6 @@ app.use(bodyParser.json());
 app.use(cors());
 //使用cookieParser
 app.use(cookieParser());
-//session配置
-app.use(
-  session({
-    secret: 'secretForPFU', //安全性考虑设置secret
-    name: 'login', //cookie的name
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7
-    }, //设置过期时间为7天
-    resave: false, //及时session没有修改，也保存session值，默认为true
-    saveUninitialized: true, //无论有没有session cookie，每次请求都设置session cookie
-    store: new MongoStore({
-      url: 'mongodb://localhost:27017/mongoSession'
-    })
-  })
-);
 //使用用户路由
 app.use('/user', userRouter);
 //使用文件路由
