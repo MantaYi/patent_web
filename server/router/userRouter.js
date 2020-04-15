@@ -20,6 +20,7 @@ function generateToken(data) {
   let token = jwt.sign(data, secret);
   return token;
 }
+
 //解密token的方法
 function verifyToken(token) {
   let secret = 'PFUSecret';
@@ -45,7 +46,7 @@ router.post('/reg', (req, res) => {
     .then((data) => {
       if (data.length === 0) {
         //用户名不存在，可以注册
-        return User.insertMany({
+        User.insertMany({
           userName,
           password,
           userEmail,
@@ -58,7 +59,7 @@ router.post('/reg', (req, res) => {
         });
       }
     })
-    .then(() => {
+    .then(_ => {
       let data = {
         userName,
         password
@@ -209,7 +210,7 @@ router.post('/myPatent', (req, res) => {
           let tempData = {
             _id: item
           };
-          let resData = File.find(tempData);
+          let resData = Patent.find(tempData);
           if (resData) {
             userPatent.push(resData);
           }

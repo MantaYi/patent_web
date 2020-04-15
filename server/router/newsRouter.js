@@ -1,0 +1,66 @@
+//引入express插件
+const express = require('express');
+//引入新闻模块
+const News = require('../db/model/newsModel');
+
+//实例化路由
+const router = express.router();
+
+//新闻查看search
+router.get('/search', (req, res) => {
+  News.find({}).then(data => {
+      res.send({
+        err: 0,
+        msg: '新闻查找成功',
+        data
+      })
+    })
+    .catch(err => {
+      res.send({
+        err: -99,
+        msg: '服务器错误'
+      })
+    })
+})
+
+//新闻按领域查找searchByArea
+router.get('/searchByArea', (req, res) => {
+  let newsArea = req.query.newsArea;
+  News.find({
+    newsArea
+  }).then(data => {
+    res.send({
+      err: 0,
+      msg: '新闻查找成功',
+      data
+    })
+  }).catch(err => {
+    res.send({
+      err: -99,
+      msg: '服务器错误'
+    })
+  })
+})
+
+//新闻按关键词查找searchByKeyword
+router.get('/searchByKeyword', (req, res) => {
+  let keyword = req.query.keyword;
+  let regExp = new RegExp(`/.*${keyword}.*`);
+  News.find({
+    newsContent: regExp
+  }).then(data => {
+    res.send({
+      err: 0,
+      msg: '新闻查找成功',
+      data
+    })
+  }).catch(err => {
+    res.send({
+      err: -99,
+      msg: '服务器错误'
+    })
+  })
+})
+
+//路由导出
+module.exports = router;
