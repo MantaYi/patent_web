@@ -7,7 +7,7 @@ let knowledgeSchema = new mongoose.Schema({
     required: true,
   },
   knowledgeContent: {
-    type: Array,
+    type: String,
     required: true,
   },
   knowledgeArea: {

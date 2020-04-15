@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 //定义用户对象
 let lawSchema = new mongoose.Schema({
   lawContent: {
-    type: Array,
+    type: String,
     required: true,
   },
   lawFrom: {

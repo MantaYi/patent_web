@@ -7,7 +7,7 @@ let newsSchema = new mongoose.Schema({
     required: true,
   },
   newsContent: {
-    type: Array,
+    type: String,
     required: true,
   },
   newsPicture: {

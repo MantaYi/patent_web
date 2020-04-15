@@ -10,10 +10,6 @@ let fileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  fileOwnerId: {
-    type: String,
-    required: true,
-  },
   fileOwner: {
     type: String,
     required: true,

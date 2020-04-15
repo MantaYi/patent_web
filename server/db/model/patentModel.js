@@ -7,10 +7,6 @@ let patentSchema = new mongoose.Schema({
     required: true,
   },
   patentContent: {
-    type: Array,
-    required: true,
-  },
-  patentApplicantId: {
     type: String,
     required: true,
   },
