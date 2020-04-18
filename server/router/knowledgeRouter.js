@@ -4,7 +4,7 @@ const express = require('express');
 const Knowledge = require('../db/model/knowledgeModel');
 
 //路由实例化
-const router = express.router();
+const router = express.Router();
 
 //知识查看search
 router.get('/search', (req, res) => {
@@ -45,7 +45,7 @@ router.get('/searchByArea', (req, res) => {
 //知识按关键字查找searchByKeyword
 router.get('/searchByKeyword', (req, res) => {
   let keyword = req.query.keyword;
-  let regExp = new RegExp(`/.*${keyword}.*`);
+  let regExp = new RegExp(`${keyword}`);
   Knowledge.find({
     knowledgeContent: regExp
   }).then(data => {

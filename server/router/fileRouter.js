@@ -38,7 +38,10 @@ function verifyToken(token) {
 
 //单文件上传
 router.post('/fileUpload', upload.single('file'), (req, res, next) => {
-  let { size, mimetype, path } = req.file;
+  let {
+    size,
+    mimetype
+  } = req.file;
   //定义允许上传的文件类型
   let types = ['jpg', 'jpeg', 'png', 'gif', 'docx', 'pdf'];
   //提取文件后缀
@@ -67,10 +70,10 @@ router.post('/fileUpload', upload.single('file'), (req, res, next) => {
 router.get('/search', (req, res) => {
   File.find({})
     .then((data) => {
-      if (data) {
+      if (data.length != 0) {
         res.send({
           err: 0,
-          msg: '查找成功',
+          msg: '文件查找成功',
           data,
         });
       } else {
@@ -82,7 +85,7 @@ router.get('/search', (req, res) => {
     })
     .catch((err) => {
       res.send({
-        err: -2,
+        err: -98,
         msg: '数据库错误',
       });
     });
@@ -93,46 +96,91 @@ router.post('/upload', (req, res) => {
   let {
     filePath,
     fileName,
-    fileOwner,
     filePrice,
     fileArea,
     filePatentType,
+    token
   } = req.body;
-  File.insertMany({
-    filePath,
-    fileName,
-    fileOwner,
-    filePrice,
-    fileArea,
-    filePatentType,
-  })
-    .then((_) => {
-      res,
-        send({
-          err: 0,
-          msg: '文件上传成功',
+  if (token) {
+    let data = verifyToken(token);
+    User.find({
+        userName: data.userName,
+        password: data.password
+      }).then(data => {
+        if (data.length != 0) {
+          let fileOwner = data[0].userName;
+          File.insertMany({
+              filePath,
+              fileName,
+              fileOwner,
+              filePrice,
+              fileArea,
+              filePatentType,
+            })
+            .then((_) => {
+              File.find({
+                filePath,
+                fileName,
+                fileOwner,
+                filePrice,
+                fileArea,
+                filePatentType,
+              }).then(fileData => {
+                let userUploadFiles;
+                if (data[0].userUploadFiles.length != 0) {
+                  userUploadFiles = data[0].userUploadFiles;
+                } else {
+                  userUploadFiles = [0];
+                }
+                userUploadFiles.push(fileData[0]._id);
+                let userUpdates = {
+                  $set: {
+                    userUploadFiles
+                  }
+                }
+                User.find(data[0]).then(data => {
+                  User.updateOne(data[0], userUpdates).then(_ => {
+                    res.send({
+                      err: 0,
+                      msg: '文件上传成功',
+                    });
+                  })
+                })
+              })
+            })
+        } else {
+          res.send({
+            err: -2,
+            msg: '未查找到用户'
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send({
+          err: -98,
+          msg: '数据库出错',
         });
-    })
-    .catch((err) => {
-      res.send({
-        err: -98,
-        msg: '数据库出错',
       });
-    });
+  } else {
+    res.send({
+      err: -1,
+      msg: '用户未登录'
+    })
+  }
 });
 
 //文件按领域查找searchByArea
 router.get('/searchByArea', (req, res) => {
-  let query = req.query;
-  let fileArea = query.fileArea;
+  let fileArea = req.query.fileArea;
   File.find({
-    fileArea,
-  })
+      fileArea,
+    })
     .then((data) => {
-      if (data) {
+      if (data.length != 0) {
         res.send({
           err: 0,
-          msg: '查找成功',
+          msg: '文件查找成功',
           data,
         });
       } else {
@@ -152,16 +200,15 @@ router.get('/searchByArea', (req, res) => {
 
 //文件按类型查找searchByType
 router.get('/searchByType', (req, res) => {
-  let query = req.query;
-  let filePatentType = query.filePatentType;
+  let filePatentType = req.query.filePatentType;
   File.find({
-    filePatentType,
-  })
+      filePatentType,
+    })
     .then((data) => {
-      if (data) {
+      if (data.length != 0) {
         res.send({
           err: 0,
-          msg: '查找成功',
+          msg: '文件查找成功',
           data,
         });
       } else {
@@ -186,10 +233,10 @@ router.get('/searchByDownloadTimes', (req, res) => {
       fileDownloadTimes: -1,
     })
     .then((data) => {
-      if (data) {
+      if (data.length != 0) {
         res.send({
           err: 0,
-          msg: '查找成功',
+          msg: '文件查找成功',
           data,
         });
       } else {
@@ -208,67 +255,126 @@ router.get('/searchByDownloadTimes', (req, res) => {
 });
 
 //购买文件purchase
-router.post('purchase', (req, res) => {
-  if (req.body.token) {
-    let data = verifyToken(req.body.token);
-    let { fileId, filePrice } = req.body;
-    User.find(data).then((data) => {
-      let userData = data[0];
-      if (userData.userScore < filePrice) {
-        res.send({
-          err: -2,
-          msg: '剩余积分不足',
-        });
+router.post('/purchase', (req, res) => {
+  let {
+    fileId,
+    filePrice,
+    token
+  } = req.body;
+  File.find({
+      _id: fileId
+    }).then(fileData => {
+      if (fileData.length != 0) {
+        let tokenData = verifyToken(token);
+        User.find({
+          userName: tokenData.userName,
+          password: tokenData.password
+        }).then(userData => {
+          if (userData.length != 0) {
+            let userHasFiles, userScore, filePurchaseTimes;
+            if (userData[0].userHasFiles.length != 0) {
+              userHasFiles = userData[0].userHasFiles;
+              userHasFiles.push(fileId);
+            } else {
+              userHasFiles = [];
+            }
+            if (userData[0].userScore < filePrice || userData[0].userScore == 0) {
+              res.send({
+                err: -3,
+                msg: '用户积分不足'
+              })
+            } else {
+              userScore = userData[0].userScore - filePrice;
+            }
+            let userUpdates = {
+              $set: {
+                userHasFiles,
+                userScore
+              }
+            }
+            filePurchaseTimes = fileData[0].filePurchaseTimes + 1;
+            let fileUpdates = {
+              $set: {
+                filePurchaseTimes
+              }
+            }
+            File.updateOne(fileData[0], fileUpdates).then(_ => {})
+            User.find({
+              userName: tokenData.userName,
+              password: tokenData.password
+            }).then(data => {
+              User.updateOne(data[0], userUpdates).then(_ => {
+                res.send({
+                  err: 0,
+                  msg: '文件购买成功'
+                })
+              })
+            })
+          } else {
+            res.send({
+              err: -2,
+              msg: '用户不存在'
+            })
+          }
+        })
       } else {
-        let updates = {
-          $set: {
-            userScore: userData.userScore - filePrice,
-            userHasFile: userData.userHasFile.push(fileId),
-          },
-        };
-        User.update(userData, updates)
-          .then((_) => {
-            res.send({
-              err: 0,
-              msg: '文件购买成功',
-            });
-          })
-          .catch((err) => {
-            res.send({
-              err: -98,
-              msg: '数据库错误',
-            });
-          });
+        res.send({
+          err: -1,
+          msg: '文件不存在'
+        })
       }
-    });
-  } else {
-    res.send({
-      err: -1,
-      msg: '用户未登录',
-    });
-  }
-});
+    })
+    .catch(err => {
+      res.send({
+        err: -99,
+        msg: '服务器错误'
+      })
+    })
+})
 
 //下载文件download
-router.post('download', (req, res) => {
+router.post('/download', (req, res) => {
   if (req.body.token) {
     let data = verifyToken(req.body.token);
-    let { fileId } = req.body;
-    User.find(data).then((data) => {
-      if (data[0].userHasFile.indexOf(fileId) != -1) {
-        File.find(fileId).then((data) => {
-          let { filePath } = data[0];
-          res.send({
-            err: 0,
-            msg: '文件可下载',
-            filePath,
+    let {
+      fileId
+    } = req.body;
+    User.find({
+      userName: data.userName,
+      password: data.password
+    }).then((data) => {
+      if (data.length != 0) {
+        if (data[0].userHasFiles.indexOf(fileId) != -1) {
+          File.find({
+            _id: fileId
+          }).then((data) => {
+            if (data.length != 0) {
+              let {
+                filePath
+              } = data[0];
+              res.send({
+                err: 0,
+                msg: '文件可下载',
+                filePath,
+              });
+            } else {
+              res.send({
+                err: -4,
+                msg: '要下载的文件不存在'
+              })
+            }
           });
-        });
+        } else {
+          res.send({
+            err: -2,
+            msg: '请先购买文件',
+          });
+        }
       } else {
         res.send({
-          err: -2,
-          msg: '请先购买文件',
-        });
+          err: -3,
+          msg: '用户不存在'
+        })
       }
     });
   } else {
@@ -280,34 +386,38 @@ router.post('download', (req, res) => {
 });
 
 //举报文件inform
-router.get('inform', (req, res) => {
+router.get('/inform', (req, res) => {
   let fileId = req.query.fileId;
-  File.find(fileId)
+  File.find({
+      _id: fileId
+    })
     .then((data) => {
-      let fileData = data[0];
-      let updates = {
-        $set: {
-          fileInformTimes: fileInformTimes + 1,
-        },
-      };
-      File.update(fileData, updates)
-        .then((_) => {
-          res.send({
-            err: 0,
-            msg: '文件举报成功',
-          });
+      if (data.length != 0) {
+        let fileData = data[0];
+        let updates = {
+          $set: {
+            fileInformTimes: fileData.fileInformTimes + 1,
+          },
+        };
+        File.updateOne(fileData, updates)
+          .then((_) => {
+            res.send({
+              err: 0,
+              msg: '文件举报成功',
+            });
+          })
+      } else {
+        res.send({
+          err: -1,
+          msg: '文件不存在'
         })
-        .catch((err) => {
-          res.send({
-            err: -98,
-            msg: '数据库错误',
-          });
-        });
+      }
     })
     .catch((err) => {
+      console.log(err);
       res.send({
-        err: -98,
-        msg: '数据库错误',
+        err: -99,
+        msg: '服务器错误',
       });
     });
 });

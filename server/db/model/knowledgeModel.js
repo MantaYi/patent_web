@@ -13,12 +13,12 @@ let knowledgeSchema = new mongoose.Schema({
   knowledgeArea: {
     type: String,
     required: true,
-  }
+  },
 }, {
   versionKey: false,
 });
 //将schema对象转换为数据模型
 //该数据对象和集合关联('集合名',schema对象)
-let Knowledge = mongoose.model('knowledge', knowledgeSchema);
+const Knowledge = mongoose.model('knowledge', knowledgeSchema);
 
 module.exports = Knowledge;

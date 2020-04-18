@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 //引入文件模块
 const File = require('../db/model/fileModel');
 //引入知识模块
-const Knowledge = require('../db/model/KnowledgeModel');
+const Knowledge = require('../db/model/knowledgeModel');
 //引入法规模块
 const Law = require('../db/model/lawModel');
 //引入新闻模块
@@ -16,7 +16,7 @@ const Patent = require('../db/model/patentModel');
 const User = require('../db/model/userModel');
 
 //路由实例化
-const router = express.router();
+const router = express.Router();
 
 //解密token的方法
 function verifyToken(token) {
@@ -26,17 +26,19 @@ function verifyToken(token) {
 }
 
 //用户查看userSearch
-router.post('userSearch', (req, res) => {
+router.post('/userSearch', (req, res) => {
   if (req.body.token) {
     let userData = verifyToken(req.body.token);
-    let { userId } = req.body;
+    let {
+      userId
+    } = req.body;
     User.find({
-      userData,
-    })
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -45,7 +47,7 @@ router.post('userSearch', (req, res) => {
             User.find({
               _id: userId,
             }).then((data) => {
-              if (data) {
+              if (data.length != 0) {
                 res.send({
                   err: 0,
                   msg: '用户查找成功',
@@ -59,6 +61,11 @@ router.post('userSearch', (req, res) => {
               }
             });
           }
+        } else {
+          res.send({
+            err: -4,
+            msg: '管理员不存在'
+          })
         }
       })
       .catch((err) => {
@@ -76,22 +83,27 @@ router.post('userSearch', (req, res) => {
 });
 
 //用户删除userDelete
-router.post('userDelete', (req, res) => {
-  let { userId, token } = req.body;
+router.post('/userDelete', (req, res) => {
+  let {
+    userId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(req.body.token);
-    User.find(userData).then((data) => {
-      if (data) {
-        let userType = data[0].userType;
-        if (userType != 99) {
+    User.find({
+      userName: userData.userName,
+      password: userData.password
+    }).then((data) => {
+      if (data.length != 0) {
+        if (data[0].userType != 99) {
           res.send({
             err: -3,
             msg: '权限不足',
           });
         } else {
           User.deleteOne({
-            _id: userId,
-          })
+              _id: userId,
+            })
             .then((_) => {
               res.send({
                 err: 0,
@@ -108,7 +120,7 @@ router.post('userDelete', (req, res) => {
       } else {
         res.send({
           err: -2,
-          msg: '用户不存在',
+          msg: '管理员不存在',
         });
       }
     });
@@ -121,7 +133,7 @@ router.post('userDelete', (req, res) => {
 });
 
 //用户修改userChange
-router.post('userChange', (req, res) => {
+router.post('/userChange', (req, res) => {
   let {
     userId,
     userName,
@@ -134,10 +146,12 @@ router.post('userChange', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData).then((data) => {
-      if (data) {
-        let type = data[0].userType;
-        if (type != 99) {
+    User.find({
+      userName: userData.userName,
+      password: userData.password
+    }).then((data) => {
+      if (data.length != 0) {
+        if (data[0].userType != 99) {
           res.send({
             err: -3,
             msg: '权限不足',
@@ -146,8 +160,7 @@ router.post('userChange', (req, res) => {
           User.find({
             _id: userId,
           }).then((data) => {
-            if (data) {
-              let changeData = data[0];
+            if (data.length != 0) {
               let updates = {
                 $set: {
                   userName,
@@ -158,7 +171,7 @@ router.post('userChange', (req, res) => {
                   userScore,
                 },
               };
-              User.update(changeData, updates)
+              User.updateOne(data[0], updates)
                 .then((_) => {
                   res.send({
                     err: 0,
@@ -195,15 +208,20 @@ router.post('userChange', (req, res) => {
 });
 
 //专利查找patentSearch
-router.post('patentSearch', (req, res) => {
-  let { patentId, token } = req.body;
+router.post('/patentSearch', (req, res) => {
+  let {
+    patentId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -212,7 +230,7 @@ router.post('patentSearch', (req, res) => {
             Patent.find({
               _id: patentId,
             }).then((data) => {
-              if (data) {
+              if (data.length != 0) {
                 res.send({
                   err: 0,
                   msg: '专利查找成功',
@@ -229,7 +247,7 @@ router.post('patentSearch', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -248,15 +266,20 @@ router.post('patentSearch', (req, res) => {
 });
 
 //专利状态变更patentStatusChange
-router.post('patentStatusChange', (req, res) => {
-  let { patentId, token } = req.body;
+router.post('/patentStatusChange', (req, res) => {
+  let {
+    patentId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -265,7 +288,7 @@ router.post('patentStatusChange', (req, res) => {
             Patent.find({
               _id: patentId,
             }).then((data) => {
-              if (data) {
+              if (data.length != 0) {
                 let patentData = data[0];
                 if (patentData.patentStatus >= 5) {
                   res.send({
@@ -296,7 +319,7 @@ router.post('patentStatusChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -315,7 +338,7 @@ router.post('patentStatusChange', (req, res) => {
 });
 
 //专利修改patentChange
-router.post('patentChange', (req, res) => {
+router.post('/patentChange', (req, res) => {
   let {
     patentId,
     patentName,
@@ -330,11 +353,13 @@ router.post('patentChange', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -343,8 +368,7 @@ router.post('patentChange', (req, res) => {
             Patent.find({
               patentId,
             }).then((data) => {
-              if (data) {
-                let patentData = data[0];
+              if (data.length != 0) {
                 let updates = {
                   $set: {
                     patentName,
@@ -358,7 +382,7 @@ router.post('patentChange', (req, res) => {
                     patentApplyDate,
                   },
                 };
-                Patent.update(patentData, updates).then((_) => {
+                Patent.updateOne(data[0], updates).then((_) => {
                   res.send({
                     err: 0,
                     msg: '专利修改成功',
@@ -375,7 +399,7 @@ router.post('patentChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -394,15 +418,20 @@ router.post('patentChange', (req, res) => {
 });
 
 //专利删除patentDelete
-router.post('patentDelete', (req, res) => {
-  let { patentId, token } = req.body;
+router.post('/patentDelete', (req, res) => {
+  let {
+    patentId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -420,7 +449,7 @@ router.post('patentDelete', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -439,15 +468,22 @@ router.post('patentDelete', (req, res) => {
 });
 
 //知识增加knowledgeAdd
-router.post('knowledgeAdd', (req, res) => {
-  let { knowledgeHeadline, knowledgeContent, knowledgeArea, token } = req.body;
+router.post('/knowledgeAdd', (req, res) => {
+  let {
+    knowledgeHeadline,
+    knowledgeContent,
+    knowledgeArea,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -467,7 +503,7 @@ router.post('knowledgeAdd', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -486,15 +522,20 @@ router.post('knowledgeAdd', (req, res) => {
 });
 
 //知识查找knowledgeSearch
-router.post('knowledgeSearch', (req, res) => {
-  let { knowledgeId, token } = req.body;
+router.post('/knowledgeSearch', (req, res) => {
+  let {
+    knowledgeId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -503,7 +544,7 @@ router.post('knowledgeSearch', (req, res) => {
             Knowledge.find({
               _id: knowledgeId,
             }).then((data) => {
-              if (data) {
+              if (data.length != 0) {
                 res.send({
                   err: 0,
                   msg: '知识查找成功',
@@ -520,7 +561,7 @@ router.post('knowledgeSearch', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -539,23 +580,28 @@ router.post('knowledgeSearch', (req, res) => {
 });
 
 //知识删除knowledgeDelete
-router.post('knowledgeDelete', (req, res) => {
-  let { knowledgeId, token } = req.body;
+router.post('/knowledgeDelete', (req, res) => {
+  let {
+    knowledgeId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             Knowledge.deleteOne({
-              _id: knowledgeId,
-            })
+                _id: knowledgeId,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -572,7 +618,7 @@ router.post('knowledgeDelete', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -591,7 +637,7 @@ router.post('knowledgeDelete', (req, res) => {
 });
 
 //知识修改knowledgeChange
-router.post('knowledgeChange', (req, res) => {
+router.post('/knowledgeChange', (req, res) => {
   let {
     knowledgeId,
     knowledgeHeadline,
@@ -601,11 +647,13 @@ router.post('knowledgeChange', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -618,12 +666,11 @@ router.post('knowledgeChange', (req, res) => {
                 knowledgeArea,
               },
             };
-            Knowledge.update(
-              {
-                _id: knowledgeId,
-              },
-              updates
-            )
+            Knowledge.updateOne({
+                  _id: knowledgeId,
+                },
+                updates
+              )
               .then((_) => {
                 res.send({
                   err: 0,
@@ -640,7 +687,7 @@ router.post('knowledgeChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -659,7 +706,7 @@ router.post('knowledgeChange', (req, res) => {
 });
 
 //新闻添加newsAdd
-router.post('newsAdd', (req, res) => {
+router.post('/newsAdd', (req, res) => {
   let {
     newsHeadline,
     newsContent,
@@ -670,23 +717,25 @@ router.post('newsAdd', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             News.insertMany({
-              newsHeadline,
-              newsContent,
-              newsPicture,
-              newsDate,
-              newsArea,
-            })
+                newsHeadline,
+                newsContent,
+                newsPicture,
+                newsDate,
+                newsArea,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -703,7 +752,7 @@ router.post('newsAdd', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -722,14 +771,19 @@ router.post('newsAdd', (req, res) => {
 });
 
 //新闻查找newsSearch
-router.post('newsSearch', (req, res) => {
-  let { newsId, token } = req.body;
+router.post('/newsSearch', (req, res) => {
+  let {
+    newsId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData).then((data) => {
-      if (data) {
-        let userType = data[0].userType;
-        if (userType != 99) {
+    User.find({
+      userName: userData.userName,
+      password: userData.password
+    }).then((data) => {
+      if (data.length != 0) {
+        if (data[0].userType != 99) {
           res.send({
             err: -3,
             msg: '权限不足',
@@ -738,7 +792,7 @@ router.post('newsSearch', (req, res) => {
           News.find({
             _id: newsId,
           }).then((data) => {
-            if (data) {
+            if (data.length != 0) {
               res.send({
                 err: 0,
                 msg: '新闻查找成功',
@@ -755,7 +809,7 @@ router.post('newsSearch', (req, res) => {
       } else {
         res.send({
           err: -2,
-          msg: '用户不存在',
+          msg: '管理员不存在',
         });
       }
     });
@@ -768,23 +822,28 @@ router.post('newsSearch', (req, res) => {
 });
 
 //新闻删除newsDelete
-router.post('newsDelete', (req, res) => {
-  let { newsId, token };
+router.post('/newsDelete', (req, res) => {
+  let {
+    newsId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             News.deleteOne({
-              _id: newsId,
-            })
+                _id: newsId,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -801,7 +860,7 @@ router.post('newsDelete', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -820,7 +879,7 @@ router.post('newsDelete', (req, res) => {
 });
 
 //新闻修改newsChange
-router.post('newsChange', (req, res) => {
+router.post('/newsChange', (req, res) => {
   let {
     newsId,
     newsHeadline,
@@ -832,11 +891,13 @@ router.post('newsChange', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -851,12 +912,11 @@ router.post('newsChange', (req, res) => {
                 newsArea,
               },
             };
-            News.updateOne(
-              {
-                _id: newsId,
-              },
-              updates
-            )
+            News.updateOne({
+                  _id: newsId,
+                },
+                updates
+              )
               .then((_) => {
                 res.send({
                   err: 0,
@@ -873,7 +933,7 @@ router.post('newsChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -892,26 +952,34 @@ router.post('newsChange', (req, res) => {
 });
 
 //法规增加lawAdd
-router.post('lawAdd', (req, res) => {
-  let { lawContent, lawFrom, lawPatentType, lawArea, token } = req.body;
+router.post('/lawAdd', (req, res) => {
+  let {
+    lawContent,
+    lawFrom,
+    lawPatentType,
+    lawArea,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             Law.insertMany({
-              lawContent,
-              lawFrom,
-              lawPatentType,
-              lawArea,
-            })
+                lawContent,
+                lawFrom,
+                lawPatentType,
+                lawArea,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -928,7 +996,7 @@ router.post('lawAdd', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -947,25 +1015,30 @@ router.post('lawAdd', (req, res) => {
 });
 
 //法规查找lawSearch
-router.post('lawSearch', (req, res) => {
-  let { lawId, token } = req.body;
+router.post('/lawSearch', (req, res) => {
+  let {
+    lawId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             Law.find({
-              _id: lawId,
-            })
+                _id: lawId,
+              })
               .then((data) => {
-                if (data) {
+                if (data.length != 0) {
                   res.send({
                     err: 0,
                     msg: '法规查找成功',
@@ -988,7 +1061,7 @@ router.post('lawSearch', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -1007,23 +1080,28 @@ router.post('lawSearch', (req, res) => {
 });
 
 //法规删除lawDelete
-router.post('lawDelete', (req, res) => {
-  let { lawId, token } = req.body;
+router.post('/lawDelete', (req, res) => {
+  let {
+    lawId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             Law.deleteOne({
-              _id: lawId,
-            })
+                _id: lawId,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -1040,7 +1118,7 @@ router.post('lawDelete', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -1059,15 +1137,24 @@ router.post('lawDelete', (req, res) => {
 });
 
 //法规修改lawChange
-router.post('lawChange', (req, res) => {
-  let { lawId, lawContent, lawFrom, lawPatentType, lawArea, token } = req.body;
+router.post('/lawChange', (req, res) => {
+  let {
+    lawId,
+    lawContent,
+    lawFrom,
+    lawPatentType,
+    lawArea,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -1081,12 +1168,11 @@ router.post('lawChange', (req, res) => {
                 lawArea,
               },
             };
-            Law.updateOne(
-              {
-                _id: lawId,
-              },
-              updates
-            )
+            Law.updateOne({
+                  _id: lawId,
+                },
+                updates
+              )
               .then((_) => {
                 res.send({
                   err: 0,
@@ -1103,7 +1189,7 @@ router.post('lawChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -1122,14 +1208,19 @@ router.post('lawChange', (req, res) => {
 });
 
 //文件查找fileSearch
-router.post('fileSearch', (req, res) => {
-  let { fileId, token } = req.body;
+router.post('/fileSearch', (req, res) => {
+  let {
+    fileId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData).then((data) => {
-      if (data) {
-        let userType = data[0].userType;
-        if (userType != 99) {
+    User.find({
+      userName: userData.userName,
+      password: userData.password
+    }).then((data) => {
+      if (data.length != 0) {
+        if (data[0].userType != 99) {
           res.send({
             err: -3,
             msg: '权限不足',
@@ -1155,7 +1246,7 @@ router.post('fileSearch', (req, res) => {
       } else {
         res.send({
           err: -2,
-          msg: '用户不存在',
+          msg: '管理员不存在',
         });
       }
     });
@@ -1168,23 +1259,28 @@ router.post('fileSearch', (req, res) => {
 });
 
 //文件删除fileDelete
-router.post('fileDelete', (req, res) => {
-  let { fileId, token } = req.body;
+router.post('/fileDelete', (req, res) => {
+  let {
+    fileId,
+    token
+  } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
             });
           } else {
             File.deleteOne({
-              _id: fileId,
-            })
+                _id: fileId,
+              })
               .then((_) => {
                 res.send({
                   err: 0,
@@ -1201,7 +1297,7 @@ router.post('fileDelete', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })
@@ -1220,7 +1316,7 @@ router.post('fileDelete', (req, res) => {
 });
 
 //文件修改fileChange
-router.post('fileChange', (req, res) => {
+router.post('/fileChange', (req, res) => {
   let {
     fileId,
     filePath,
@@ -1236,11 +1332,13 @@ router.post('fileChange', (req, res) => {
   } = req.body;
   if (token) {
     let userData = verifyToken(token);
-    User.find(userData)
+    User.find({
+        userName: userData.userName,
+        password: userData.password
+      })
       .then((data) => {
-        if (data) {
-          let userType = data[0].userType;
-          if (userType != 99) {
+        if (data.length != 0) {
+          if (data[0].userType != 99) {
             res.send({
               err: -3,
               msg: '权限不足',
@@ -1259,7 +1357,9 @@ router.post('fileChange', (req, res) => {
                 fileInformTimes,
               },
             };
-            File.updateOne({ _id: fileId }, updates)
+            File.updateOne({
+                _id: fileId
+              }, updates)
               .then((_) => {
                 res.send({
                   err: 0,
@@ -1276,7 +1376,7 @@ router.post('fileChange', (req, res) => {
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在',
+            msg: '管理员不存在',
           });
         }
       })

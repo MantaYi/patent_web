@@ -4,7 +4,7 @@ const express = require('express');
 const News = require('../db/model/newsModel');
 
 //实例化路由
-const router = express.router();
+const router = express.Router();
 
 //新闻查看search
 router.get('/search', (req, res) => {
@@ -45,7 +45,7 @@ router.get('/searchByArea', (req, res) => {
 //新闻按关键词查找searchByKeyword
 router.get('/searchByKeyword', (req, res) => {
   let keyword = req.query.keyword;
-  let regExp = new RegExp(`/.*${keyword}.*`);
+  let regExp = new RegExp(`${keyword}`);
   News.find({
     newsContent: regExp
   }).then(data => {

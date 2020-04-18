@@ -8,7 +8,7 @@ const Patent = require('../db/model/patentModel');
 const User = require('../db/model/userModel');
 
 //实例化路由
-const router = express.router();
+const router = express.Router();
 
 //解密token的方法
 function verifyToken(token) {
@@ -18,7 +18,7 @@ function verifyToken(token) {
 }
 
 //专利申请apply
-router.post('apply', (req, res) => {
+router.post('/apply', (req, res) => {
   let {
     patentName,
     patentContent,
@@ -30,45 +30,64 @@ router.post('apply', (req, res) => {
   } = req.body;
   let data = verifyToken(token);
   User.find({
-      data
+      userName: data.userName,
+      password: data.password
     }).then(data => {
-      let userData = data[0];
-      let patentApplicantId = userData._id;
-      let patentApplicant = userData.userName;
-      Patent.insertMany({
-        patentName,
-        patentApplicantId,
-        patentApplicant,
-        patentContent,
-        patentApplicantLocation,
-        patentFile,
-        patentType,
-        patentArea
-      });
-      Patent.find({
-        patentName,
-        patentApplicantId,
-        patentApplicant,
-        patentContent,
-        patentApplicantLocation,
-        patentFile,
-        patentType,
-        patentArea
-      }).then(data => {
-        let updates = {
-          $set: {
-            userPatent: userData.userPatent.push(data[0]._id)
+      if (data.length != 0) {
+        let userData = data[0];
+        let patentApplicant = userData.userName;
+        Patent.insertMany({
+          patentName,
+          patentApplicant,
+          patentContent,
+          patentApplicantLocation,
+          patentFile,
+          patentType,
+          patentArea
+        });
+        Patent.find({
+          patentName,
+          patentApplicant,
+          patentContent,
+          patentApplicantLocation,
+          patentFile,
+          patentType,
+          patentArea
+        }).then(data => {
+          if (data.length != 0) {
+            let userPatent = userData.userPatent;
+            userPatent.push(data[0]._id);
+            console.log(userPatent);
+            console.log(userData.userPatent);
+            let updates = {
+              $set: {
+                userPatent
+              }
+            }
+            User.find(userData).then(data => {
+              User.updateOne(data[0], updates).then(_ => {
+                res.send({
+                  err: 0,
+                  msg: '专利申请完成'
+                })
+              })
+            })
+          } else {
+            res.send({
+              err: -2,
+              msg: '专利不存在'
+            })
           }
-        }
-        User.update(userData, updates).then(_ => {
-          res.send({
-            err: 0,
-            msg: '专利申请完成'
-          })
         })
-      })
+      } else {
+        res.send({
+          err: -1,
+          msg: '用户不存在'
+        })
+      }
     })
     .catch(err => {
+      console.log(err);
       res.send({
         err: -99,
         msg: '服务器出错'
@@ -101,7 +120,7 @@ router.get('/searchByArea', (req, res) => {
   }).then(data => {
     res.send({
       err: 0,
-      msg: '法规查找成功',
+      msg: '专利查找成功',
       data
     })
   }).catch(err => {
@@ -120,7 +139,7 @@ router.get('/searchByType', (req, res) => {
   }).then(data => {
     res.send({
       err: 0,
-      msg: '知识查找成功',
+      msg: '专利查找成功',
       data
     })
   }).catch(err => {
@@ -134,13 +153,14 @@ router.get('/searchByType', (req, res) => {
 //专利按关键字查找searchByKeyword
 router.get('/searchByKeyword', (req, res) => {
   let keyword = req.query.keyword;
-  let regExp = new RegExp(`/.*${keyword}.*`);
+  let regExp = new RegExp(`${keyword}`);
+  console.log(regExp);
   Patent.find({
     patentContent: regExp
   }).then(data => {
     res.send({
       err: 0,
-      msg: '法规查找成功',
+      msg: '专利查找成功',
       data
     })
   }).catch(err => {

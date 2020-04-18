@@ -4,7 +4,7 @@ const express = require('express');
 const Law = require('../db/model/lawModel');
 
 //实例化路由
-const router = express.router();
+const router = express.Router();
 
 //法规查看search
 router.get('/search', (req, res) => {
@@ -50,7 +50,7 @@ router.get('/searchByType', (req, res) => {
   }).then(data => {
     res.send({
       err: 0,
-      msg: '知识查找成功',
+      msg: '法规查找成功',
       data
     })
   }).catch(err => {
@@ -64,7 +64,7 @@ router.get('/searchByType', (req, res) => {
 //法规按关键词查找searchByKeyword
 router.get('/searchByKeyword', (req, res) => {
   let keyword = req.query.keyword;
-  let regExp = new RegExp(`/.*${keyword}.*`);
+  let regExp = new RegExp(`${keyword}`);
   Law.find({
     lawContent: regExp
   }).then(data => {
