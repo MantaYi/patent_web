@@ -11,7 +11,7 @@ let lawSchema = new mongoose.Schema({
     required: true,
   },
   lawPatentType: {
-    type: Number,
+    type: String,
     required: true,
   },
   lawArea: {

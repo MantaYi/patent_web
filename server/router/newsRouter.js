@@ -24,8 +24,8 @@ router.get('/search', (req, res) => {
 })
 
 //新闻按领域查找searchByArea
-router.get('/searchByArea', (req, res) => {
-  let newsArea = req.query.newsArea;
+router.post('/searchByArea', (req, res) => {
+  let newsArea = req.body.newsArea;
   News.find({
     newsArea
   }).then(data => {
@@ -43,8 +43,8 @@ router.get('/searchByArea', (req, res) => {
 })
 
 //新闻按关键词查找searchByKeyword
-router.get('/searchByKeyword', (req, res) => {
-  let keyword = req.query.keyword;
+router.post('/searchByKeyword', (req, res) => {
+  let keyword = req.body.keyword;
   let regExp = new RegExp(`${keyword}`);
   News.find({
     newsContent: regExp

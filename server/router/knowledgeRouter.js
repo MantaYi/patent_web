@@ -24,8 +24,8 @@ router.get('/search', (req, res) => {
 })
 
 //知识按领域查找searchByArea
-router.get('/searchByArea', (req, res) => {
-  let knowledgeArea = req.query.knowledgeArea;
+router.post('/searchByArea', (req, res) => {
+  let knowledgeArea = req.body.knowledgeArea;
   Knowledge.find({
     knowledgeArea
   }).then(data => {
@@ -43,8 +43,8 @@ router.get('/searchByArea', (req, res) => {
 })
 
 //知识按关键字查找searchByKeyword
-router.get('/searchByKeyword', (req, res) => {
-  let keyword = req.query.keyword;
+router.post('/searchByKeyword', (req, res) => {
+  let keyword = req.body.keyword;
   let regExp = new RegExp(`${keyword}`);
   Knowledge.find({
     knowledgeContent: regExp

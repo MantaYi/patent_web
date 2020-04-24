@@ -1,17 +1,32 @@
 <template>
   <div class="law">
     <div>
-      <span>相关领域：</span>
-      <span>相关专利类型：</span>
+      <span>相关领域:{{lawArea}}</span>
+      <span>相关专利类型:{{lawPatentType}}</span>
     </div>
     <div>
-      <p>政策法规内容：</p>
+      <p>政策法规内容:{{lawContent}}</p>
     </div>
     <div>
-      <p>政策法规出处</p>
+      <p>——————{{lawFrom}}</p>
     </div>
   </div>
 </template>
+<script>
+//引入axios的qs模块
+import qs from "qs";
+
+export default {
+  name: "LawComponent",
+  props: {
+    lawId: String,
+    lawFrom: String,
+    lawContent: String,
+    lawPatentType: String,
+    lawArea: String
+  }
+};
+</script>
 <style lang="less" scoped>
 a {
   color: #000;

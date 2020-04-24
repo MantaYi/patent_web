@@ -1,26 +1,16 @@
 <template>
   <div class="fileUpload">
-    <el-form ref="form" :model="form" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="文件上传">
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
+        <el-upload action="http://localhost:3000/file/fileUpload" :on-success="uploadSuccess">
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <div>只能上传文档和图片</div>
         </el-upload>
       </el-form-item>
-      <el-form-item label="文件名称">
+      <el-form-item label="文件名称" prop="fileName">
         <el-input v-model="form.fileName"></el-input>
       </el-form-item>
-      <el-form-item label="文件价格">
+      <el-form-item label="文件价格" prop="filePrice">
         <el-input v-model="form.filePrice"></el-input>
       </el-form-item>
       <el-form-item label="专利类型" prop="filePatentType">
@@ -41,75 +31,125 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">上传文件</el-button>
+        <el-button type="primary" @click="upload">上传文件</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+//引入axios的qs模块
+import qs from "qs";
+
 export default {
   name: "fileUpload",
   data() {
     return {
-      fileList: [],
       form: {
         fileName: "",
         filePrice: "",
         filePatentType: "",
-        fileArea: ""
+        fileArea: "",
+        filePath: ""
+      },
+      rules: {
+        fileName: [{ required: true, message: "请输入", trigger: "blur" }],
+        filePrice: [{ required: true, message: "请输入", trigger: "blur" }],
+        filePatentType: [
+          { required: true, message: "请输入", trigger: "blur" }
+        ],
+        fileArea: [{ required: true, message: "请输入", trigger: "blur" }]
       },
       options: [
         {
-          value: "A",
+          value: "人类生活需要",
           label: "人类生活需要"
         },
         {
-          value: "B",
+          value: "作业运输",
           label: "作业运输"
         },
         {
-          value: "C",
+          value: "化学冶金",
           label: "化学冶金"
         },
         {
-          value: "D",
+          value: "纺织造纸",
           label: "纺织造纸"
         },
         {
-          value: "E",
+          value: "固定建筑物",
           label: "固定建筑物"
         },
         {
-          value: "F",
+          value: "机械工程",
           label: "机械工程"
         },
         {
-          value: "G",
+          value: "物理",
           label: "物理"
         },
         {
-          value: "H",
+          value: "电学",
           label: "电学"
         }
       ]
     };
   },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    uploadSuccess(res) {
+      this.form.filePath = res.url;
+      this.$message({
+        message: "文件上传成功",
+        type: "success"
+      });
     },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+    upload() {
+      if (
+        this.form.fileName &&
+        this.form.filePrice &&
+        this.form.filePatentType &&
+        this.form.fileArea &&
+        this.form.filePath
+      ) {
+        let url = "http://localhost:3000/file/upload";
+        let token = localStorage.getItem("PFUToken");
+        token = JSON.parse(token).token;
+        let data = {
+          fileName: this.form.fileName,
+          filePrice: this.form.filePrice,
+          filePatentType: this.form.filePatentType,
+          fileArea: this.form.fileArea,
+          filePath: this.form.filePath,
+          token
+        };
+        this.$http({
+          method: "post",
+          url,
+          data: qs.stringify(data)
+        }).then(res => {
+          let PFUUpload = res.data;
+          if (PFUUpload.err == 0) {
+            this.$message({
+              message: "文件信息添加成功",
+              type: "success"
+            });
+          } else if (PFUApply.err == -1) {
+            this.$message({
+              message: "用户未登录",
+              type: "warning"
+            });
+          } else if (PFUApply.err == -2) {
+            this.$message.error("用户不存在");
+          } else {
+            this.$message.error("服务器出错，请稍后再试");
+          }
+        });
+      } else {
+        this.$message({
+          message: "请正确输入相关信息",
+          type: "warning"
+        });
+      }
     }
   }
 };

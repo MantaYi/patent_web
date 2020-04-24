@@ -9,7 +9,7 @@
         <el-input type="textarea" v-model="form.patentContent" :rows="5" placeholder="请输入内容"></el-input>
       </el-form-item>
       <el-form-item label="地址" prop="patentApplicationLocation">
-        <el-input v-model="form.patentApplicationLocation" clearable></el-input>
+        <el-input v-model="form.patentApplicantLocation" clearable></el-input>
       </el-form-item>
       <el-form-item label="专利类型" prop="patentType">
         <el-radio-group v-model="form.patentType">
@@ -28,30 +28,22 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="相关文件">
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
+      <el-form-item label="文件上传">
+        <el-upload action="http://localhost:3000/file/fileUpload" :on-success="uploadSuccess">
           <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传文档</div>
+          <div>只能上传文档和图片</div>
         </el-upload>
       </el-form-item>
-
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即申请</el-button>
+        <el-button type="primary" @click="apply">立即申请</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+//引入axios的qs模块
+import qs from "qs";
+
 export default {
   name: "PatentApply",
   data() {
@@ -59,9 +51,9 @@ export default {
       form: {
         patentName: "",
         patentContent: "",
-        patentApplicationLocation: "",
+        patentApplicantLocation: "",
         patentFile: "",
-        patentType: 0,
+        patentType: "",
         patentArea: ""
       },
       rules: {
@@ -73,59 +65,101 @@ export default {
         patentType: [{ required: true, message: "请输入", trigger: "blur" }],
         patentArea: [{ required: true, message: "请输入", trigger: "blur" }]
       },
-      fileList: [],
       options: [
         {
-          value: "A",
+          value: "人类生活需要",
           label: "人类生活需要"
         },
         {
-          value: "B",
+          value: "作业运输",
           label: "作业运输"
         },
         {
-          value: "C",
+          value: "化学冶金",
           label: "化学冶金"
         },
         {
-          value: "D",
+          value: "纺织造纸",
           label: "纺织造纸"
         },
         {
-          value: "E",
+          value: "固定建筑物",
           label: "固定建筑物"
         },
         {
-          value: "F",
+          value: "机械工程",
           label: "机械工程"
         },
         {
-          value: "G",
+          value: "物理",
           label: "物理"
         },
         {
-          value: "H",
+          value: "电学",
           label: "电学"
         }
       ]
     };
   },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    uploadSuccess(res) {
+      this.form.patentFile = res.url;
+      this.$message({
+        message: "文件上传成功",
+        type: "success"
+      });
     },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+    apply() {
+      if (
+        this.form.patentName &&
+        this.form.patentContent &&
+        this.form.patentApplicantLocation &&
+        this.form.patentFile &&
+        this.form.patentType &&
+        this.form.patentArea
+      ) {
+        let url = "http://localhost:3000/patent/apply";
+        let token = localStorage.getItem("PFUToken");
+        token = JSON.parse(token).token;
+        let data = {
+          patentName: this.form.patentName,
+          patentContent: this.form.patentContent,
+          patentApplicantLocation: this.form.patentApplicantLocation,
+          patentFile: this.form.patentFile,
+          patentType: this.form.patentType,
+          patentArea: this.form.patentArea,
+          token
+        };
+        this.$http({
+          method: "post",
+          url,
+          data: qs.stringify(data)
+        }).then(res => {
+          let PFUApply = res.data;
+          if (PFUApply.err == 0) {
+            this.$message({
+              message: "专利已受理",
+              type: "success"
+            });
+          } else if (PFUApply.err == -1) {
+            this.$message({
+              message: "用户未登录",
+              type: "warning"
+            });
+          } else if (PFUApply.err == -2) {
+            this.$message.error("用户不存在");
+          } else if (PFUApply.err == -3) {
+            this.$message.error("专利添加失败");
+          } else {
+            this.$message.error("服务器出错，请稍后再试");
+          }
+        });
+      } else {
+        this.$message({
+          message: "请正确输入相关信息",
+          type: "warning"
+        });
+      }
     }
   }
 };

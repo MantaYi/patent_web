@@ -55,7 +55,7 @@ router.post('/userSearch', (req, res) => {
                 });
               } else {
                 res.send({
-                  err: -2,
+                  err: -4,
                   msg: '用户不存在',
                 });
               }
@@ -63,7 +63,7 @@ router.post('/userSearch', (req, res) => {
           }
         } else {
           res.send({
-            err: -4,
+            err: -2,
             msg: '管理员不存在'
           })
         }
@@ -290,9 +290,9 @@ router.post('/patentStatusChange', (req, res) => {
             }).then((data) => {
               if (data.length != 0) {
                 let patentData = data[0];
-                if (patentData.patentStatus >= 5) {
+                if (patentData.patentStatus >= 4) {
                   res.send({
-                    err: -4,
+                    err: -5,
                     msg: '该专利已获权，无需修改',
                   });
                 } else {
@@ -677,12 +677,6 @@ router.post('/knowledgeChange', (req, res) => {
                   msg: '知识修改成功',
                 });
               })
-              .catch((err) => {
-                res.send({
-                  err: -98,
-                  msg: '数据库错误',
-                });
-              });
           }
         } else {
           res.send({
@@ -710,7 +704,6 @@ router.post('/newsAdd', (req, res) => {
   let {
     newsHeadline,
     newsContent,
-    newsPicture,
     newsDate,
     newsArea,
     token,
@@ -732,7 +725,6 @@ router.post('/newsAdd', (req, res) => {
             News.insertMany({
                 newsHeadline,
                 newsContent,
-                newsPicture,
                 newsDate,
                 newsArea,
               })
@@ -742,12 +734,6 @@ router.post('/newsAdd', (req, res) => {
                   msg: '新闻添加成功',
                 });
               })
-              .catch((err) => {
-                res.send({
-                  err: -98,
-                  msg: '数据库错误',
-                });
-              });
           }
         } else {
           res.send({
@@ -757,6 +743,7 @@ router.post('/newsAdd', (req, res) => {
         }
       })
       .catch((err) => {
+        console.log(err);
         res.send({
           err: -99,
           msg: '服务器错误',
@@ -986,12 +973,6 @@ router.post('/lawAdd', (req, res) => {
                   msg: '法规增加成功',
                 });
               })
-              .catch((err) => {
-                res.send({
-                  err: -98,
-                  msg: '数据库错误',
-                });
-              });
           }
         } else {
           res.send({
@@ -1001,6 +982,7 @@ router.post('/lawAdd', (req, res) => {
         }
       })
       .catch((err) => {
+        console.log(err);
         res.send({
           err: -99,
           msg: '服务器错误',
@@ -1229,7 +1211,7 @@ router.post('/fileSearch', (req, res) => {
           File.find({
             _id: fileId,
           }).then((data) => {
-            if (data) {
+            if (data.length != 0) {
               res.send({
                 err: 0,
                 msg: '文件查找成功',
@@ -1237,8 +1219,8 @@ router.post('/fileSearch', (req, res) => {
               });
             } else {
               res.send({
-                err: -98,
-                msg: '数据库错误',
+                err: -4,
+                msg: '文件不存在',
               });
             }
           });
@@ -1287,12 +1269,6 @@ router.post('/fileDelete', (req, res) => {
                   msg: '文件删除成功',
                 });
               })
-              .catch((err) => {
-                res.send({
-                  err: -98,
-                  msg: '数据库错误',
-                });
-              });
           }
         } else {
           res.send({
@@ -1366,12 +1342,6 @@ router.post('/fileChange', (req, res) => {
                   msg: '文件修改成功',
                 });
               })
-              .catch((err) => {
-                res.send({
-                  err: -98,
-                  msg: '数据库错误',
-                });
-              });
           }
         } else {
           res.send({

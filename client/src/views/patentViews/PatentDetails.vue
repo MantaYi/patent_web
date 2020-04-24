@@ -12,6 +12,11 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  name: "PatentDetails"
+};
+</script>
 <style lang="less" scoped>
 .patentDetails {
   position: relative;

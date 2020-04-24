@@ -27,7 +27,7 @@ function verifyToken(token) {
 }
 
 //注册逻辑
-router.post('/reg', (req, res) => {
+router.post('/register', (req, res) => {
   //获取数据
   let {
     userName,
@@ -35,8 +35,6 @@ router.post('/reg', (req, res) => {
     userEmail,
     userPhone
   } = req.body;
-  // if (!userEmail) userEmail = null;
-  // if (!userPhone) userPhone = null;
   //判断用户名是否存在
   User.find({
       userName,
@@ -89,20 +87,20 @@ router.post('/login', (req, res) => {
     let data = verifyToken(req.body.token);
     User.find({
       userName: data.userName,
-      password: data.password
-    }).then(data => {
+      password: data.password,
+    }).then((data) => {
       if (data.length == 0) {
         res.send({
           err: -3,
-          msg: '本地数据错误，请先退出登录再进行相关操作'
-        })
+          msg: '本地数据错误，请先退出登录再进行相关操作',
+        });
       } else {
         res.send({
-          err: 0,
-          msg: '用户已登录'
-        })
+          err: 1,
+          msg: '用户已登录',
+        });
       }
-    })
+    });
   } else {
     //获取数据
     let {
@@ -129,6 +127,7 @@ router.post('/login', (req, res) => {
               err: 0,
               msg: '登录成功',
               token,
+              userType: data[0].userType,
             });
           } else {
             res.send({
@@ -152,23 +151,29 @@ router.post('/myInfo', (req, res) => {
   if (req.body.token) {
     let data = verifyToken(req.body.token);
     User.find({
-      userName: data.userName,
-      password: data.password,
-    }).then((data) => {
-      if (data.length == 0) {
+        userName: data.userName,
+        password: data.password,
+      }).then((data) => {
+        if (data.length == 0) {
+          res.send({
+            err: -2,
+            msg: '用户不存在',
+          });
+        } else {
+          let resData = data[0];
+          res.send({
+            err: 0,
+            msg: '查找成功',
+            data: resData,
+          });
+        }
+      })
+      .catch(err => {
         res.send({
-          err: -2,
-          msg: '用户不存在',
-        });
-      } else {
-        let resData = data[0];
-        res.send({
-          err: 0,
-          msg: '查找成功',
-          data: resData,
-        });
-      }
-    });
+          err: -99,
+          msg: '服务器错误'
+        })
+      })
   } else {
     res.send({
       err: -1,
@@ -187,9 +192,9 @@ router.post('/myFile', (req, res) => {
       })
       .then((data) => {
         if (data.length != 0) {
-          let userHasFiles = [];
+          var userHasFiles = [];
           let userUploadFiles = [];
-          if (data[0].userHasFiles != 0) {
+          if (data[0].userHasFiles.length != 0) {
             data[0].userHasFiles.forEach((item) => {
               File.find({
                 _id: item,
@@ -200,7 +205,7 @@ router.post('/myFile', (req, res) => {
               });
             });
           }
-          if (data[0].userUploadFiles) {
+          if (data[0].userUploadFiles.length != 0) {
             data[0].userUploadFiles.forEach((item) => {
               File.find({
                 _id: item,
@@ -211,23 +216,25 @@ router.post('/myFile', (req, res) => {
               });
             });
           }
-          res.send({
-            err: 0,
-            msg: '查找成功',
-            userHasFiles,
-            userUploadFiles,
-          });
+          setTimeout(_ => {
+            res.send({
+              err: 0,
+              msg: '查找成功',
+              userHasFiles,
+              userUploadFiles,
+            });
+          }, 1000)
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在'
-          })
+            msg: '用户不存在',
+          });
         }
       })
       .catch((err) => {
         res.send({
-          err: -98,
-          msg: '数据库出错',
+          err: -99,
+          msg: '服务器出错',
         });
       });
   } else {
@@ -249,8 +256,8 @@ router.post('/myPatent', (req, res) => {
       .then((data) => {
         if (data.length != 0) {
           let userPatent = [];
-          if (data.userPatent) {
-            data.userPatent.forEach((item) => {
+          if (data[0].userPatent.length != 0) {
+            data[0].userPatent.forEach((item) => {
               Patent.find({
                 _id: item,
               }).then((data) => {
@@ -260,22 +267,24 @@ router.post('/myPatent', (req, res) => {
               });
             });
           }
-          res.send({
-            err: 0,
-            msg: '查找成功',
-            userPatent,
-          });
+          setTimeout(_ => {
+            res.send({
+              err: 0,
+              msg: '查找成功',
+              userPatent,
+            });
+          }, 1000);
         } else {
           res.send({
             err: -2,
-            msg: '用户不存在'
-          })
+            msg: '用户不存在',
+          });
         }
       })
       .catch((err) => {
         res.send({
-          err: -98,
-          msg: '数据库出错',
+          err: -99,
+          msg: '服务器出错',
         });
       });
   } else {
@@ -296,42 +305,53 @@ router.post('/infoChange', (req, res) => {
       userPhone,
       token
     } = req.body;
-    let data = verifyToken(token);
+    let userData = verifyToken(token);
     User.find({
-      userName: data.userName,
-      password: data.password,
+      userName
     }).then((data) => {
-      if (data.length == 0) {
+      if (data.length != 0) {
         res.send({
-          err: -2,
-          msg: '该用户不存在',
+          err: -3,
+          msg: '要修改的用户名已存在',
         });
       } else {
-        let updates = {
-          $set: {
-            userName,
-            password,
-            userEmail,
-            userPhone,
-          },
-        };
-        User.updateOne(data[0], updates)
-          .then((_) => {
-            let data = {
-              userName,
-              password,
-            };
-            let token = generateToken(data);
-            res.send({
-              err: 0,
-              msg: '修改成功',
-              token,
-            });
+        User.find({
+            userName: userData.userName,
+            password: userData.password,
+          }).then(data => {
+            if (data.length == 0) {
+              res.send({
+                err: -2,
+                msg: '用户不存在'
+              })
+            } else {
+              let updates = {
+                $set: {
+                  userName,
+                  password,
+                  userEmail,
+                  userPhone,
+                },
+              };
+              User.updateOne(data[0], updates)
+                .then((_) => {
+                  let data = {
+                    userName,
+                    password,
+                  };
+                  let token = generateToken(data);
+                  res.send({
+                    err: 0,
+                    msg: '修改成功',
+                    token,
+                  });
+                })
+            }
           })
           .catch((err) => {
             res.send({
-              err: -98,
-              msg: '数据库出错',
+              err: -99,
+              msg: '服务器出错',
             });
           });
       }

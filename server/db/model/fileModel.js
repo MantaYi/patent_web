@@ -24,7 +24,7 @@ let fileSchema = new mongoose.Schema({
     required: true,
   },
   filePatentType: {
-    type: Number,
+    type: String,
     required: true,
   },
   filePurchaseTimes: {

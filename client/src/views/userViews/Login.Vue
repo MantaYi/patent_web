@@ -20,7 +20,9 @@
   </div>
 </template>
 <script>
+//引入axios的qs模块
 import qs from "qs";
+
 export default {
   name: "Login",
   data() {
@@ -30,18 +32,16 @@ export default {
         password: ""
       },
       rules: {
-        userName: [{ required: true, message: "请输入", trigger: "blur" }],
-        password: [{ required: true, message: "请输入", trigger: "blur" }]
+        userName: [
+          { required: true, message: "用户名不能为空", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
       }
     };
   },
   methods: {
     login() {
-      if (this.form.userName == "") {
-        console.log("用户名不能为空");
-      } else if (this.form.password == "") {
-        console.log("密码不能为空");
-      } else {
+      if (this.form.userName && this.form.password) {
         let url = "http://localhost:3000/user/login";
         let data = {
           userName: this.form.userName,
@@ -53,23 +53,58 @@ export default {
           data: qs.stringify(data)
         })
           .then(res => {
-            console.log(res);
             let PFULog = res.data;
             if (PFULog.err == 0) {
               //登录成功的处理
+              //使用localStorage保存一些数据
+              localStorage.setItem(
+                "PFUToken",
+                JSON.stringify({ token: PFULog.token })
+              );
+              localStorage.setItem(
+                "userType",
+                JSON.stringify({ userType: PFULog.userType })
+              );
+              localStorage.setItem(
+                "userName",
+                JSON.stringify({ userName: this.form.userName })
+              );
               this.$router.push({ name: "/" });
+            } else if (PFULog.err == 1) {
+              this.$message({
+                message: "该账户已在本机登录",
+                type: "warning"
+              });
             } else if (PFULog.err == -1) {
-              //用户名错误处理
-              console.error(PFULog.msg);
+              this.$message({
+                message: "该用户不存在",
+                type: "warning"
+              });
             } else if (PFULog.err == -2) {
-              //密码错误处理
-              console.log(PFULog.msg);
+              this.$message.error("密码错误");
+            } else if (PFULog.err == -3) {
+              this.$message({
+                message: "本地登录的账户似乎已更改，请先退出登录再执行登录操作",
+                type: "warning"
+              });
             } else {
               //服务器错误处理
-              console.log(PFULog.msg);
+              this.$message.error("服务器出错，请稍后再试");
             }
           })
-          .catch(err => console.log(err)); //请求失败处理
+          .catch(err => {
+            //请求失败处理
+            this.$message({
+              message: "请求失败，请稍后再试",
+              type: "warning"
+            });
+            console.log(err);
+          });
+      } else {
+        this.$message({
+          message: "账户和密码不能为空",
+          type: "warning"
+        });
       }
     }
   }

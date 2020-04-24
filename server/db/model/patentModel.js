@@ -23,7 +23,7 @@ let patentSchema = new mongoose.Schema({
     required: true,
   },
   patentType: {
-    type: Number,
+    type: String,
     required: true,
   },
   patentArea: {

@@ -28,71 +28,74 @@ router.post('/apply', (req, res) => {
     patentArea,
     token
   } = req.body;
-  let data = verifyToken(token);
-  User.find({
-      userName: data.userName,
-      password: data.password
-    }).then(data => {
-      if (data.length != 0) {
-        let userData = data[0];
-        let patentApplicant = userData.userName;
-        Patent.insertMany({
-          patentName,
-          patentApplicant,
-          patentContent,
-          patentApplicantLocation,
-          patentFile,
-          patentType,
-          patentArea
-        });
-        Patent.find({
-          patentName,
-          patentApplicant,
-          patentContent,
-          patentApplicantLocation,
-          patentFile,
-          patentType,
-          patentArea
-        }).then(data => {
-          if (data.length != 0) {
-            let userPatent = userData.userPatent;
-            userPatent.push(data[0]._id);
-            console.log(userPatent);
-            console.log(userData.userPatent);
-            let updates = {
-              $set: {
-                userPatent
+  if (token) {
+    let data = verifyToken(token);
+    User.find({
+        userName: data.userName,
+        password: data.password
+      }).then(data => {
+        if (data.length != 0) {
+          let userData = data[0];
+          let patentApplicant = userData.userName;
+          Patent.insertMany({
+            patentName,
+            patentApplicant,
+            patentContent,
+            patentApplicantLocation,
+            patentFile,
+            patentType,
+            patentArea
+          });
+          Patent.find({
+            patentName,
+            patentApplicant,
+            patentContent,
+            patentApplicantLocation,
+            patentFile,
+            patentType,
+            patentArea
+          }).then(data => {
+            if (data.length != 0) {
+              let userPatent = JSON.parse(JSON.stringify(userData.userPatent));
+              userPatent.push(data[0]._id);
+              let updates = {
+                $set: {
+                  userPatent
+                }
               }
-            }
-            User.find(userData).then(data => {
-              User.updateOne(data[0], updates).then(_ => {
+              User.updateOne(userData, updates).then(_ => {
                 res.send({
                   err: 0,
                   msg: '专利申请完成'
                 })
               })
-            })
-          } else {
-            res.send({
-              err: -2,
-              msg: '专利不存在'
-            })
-          }
-        })
-      } else {
-        res.send({
-          err: -1,
-          msg: '用户不存在'
-        })
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      res.send({
-        err: -99,
-        msg: '服务器出错'
+            } else {
+              res.send({
+                err: -3,
+                msg: '专利添加错误'
+              })
+            }
+          })
+        } else {
+          res.send({
+            err: -2,
+            msg: '用户不存在'
+          })
+        }
       })
+      .catch(err => {
+        console.log(err);
+        res.send({
+          err: -99,
+          msg: '服务器出错'
+        })
+      })
+  } else {
+    res.send({
+      err: -1,
+      msg: '用户未登录'
     })
+  }
 })
 
 //专利查看search
@@ -113,8 +116,8 @@ router.get('/search', (req, res) => {
 })
 
 //专利按领域查找searchByArea
-router.get('/searchByArea', (req, res) => {
-  let patentArea = req.query.patentArea;
+router.post('/searchByArea', (req, res) => {
+  let patentArea = req.body.patentArea;
   Patent.find({
     patentArea
   }).then(data => {
@@ -132,8 +135,8 @@ router.get('/searchByArea', (req, res) => {
 })
 
 //专利按类型查找searchByType
-router.get('/searchByType', (req, res) => {
-  let patentType = req.query.patentType;
+router.post('/searchByType', (req, res) => {
+  let patentType = req.body.patentType;
   Patent.find({
     patentType
   }).then(data => {
@@ -151,10 +154,9 @@ router.get('/searchByType', (req, res) => {
 })
 
 //专利按关键字查找searchByKeyword
-router.get('/searchByKeyword', (req, res) => {
-  let keyword = req.query.keyword;
+router.post('/searchByKeyword', (req, res) => {
+  let keyword = req.body.keyword;
   let regExp = new RegExp(`${keyword}`);
-  console.log(regExp);
   Patent.find({
     patentContent: regExp
   }).then(data => {

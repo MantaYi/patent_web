@@ -10,10 +10,6 @@ let newsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  newsPicture: {
-    type: String,
-    required: true,
-  },
   newsDate: {
     type: Date,
     default: Date.now

@@ -6,19 +6,39 @@
       </div>
       <div>
         <div>
-          <h2>新闻标题：</h2>
+          <h2>新闻标题:{{newsHeadline}}</h2>
         </div>
         <div>
-          <p>新闻内容：</p>
+          <p>新闻内容:{{newsContent}}</p>
         </div>
         <div>
-          <span>新闻领域：</span>
-          <span>新闻发布时间：2020-03-02</span>
+          <span>新闻领域:{{newsArea}}</span>
+          <span>新闻发布时间:{{newsDateZh}}</span>
         </div>
       </div>
     </div>
   </router-link>
 </template>
+<script>
+//引入axios的qs模块
+import qs from "qs";
+
+export default {
+  name: "LawComponent",
+  props: {
+    newsId: String,
+    newsHeadline: String,
+    newsContent: String,
+    newsDate: String,
+    newsArea: String
+  },
+  computed: {
+    newsDateZh() {
+      return this.newsDate.substr(0, 10);
+    }
+  }
+};
+</script>
 <style lang="less" scoped>
 a {
   color: #000;

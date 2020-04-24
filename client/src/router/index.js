@@ -23,12 +23,6 @@ const routes = [{
           import("../views/fileViews/File.vue")
       },
       {
-        path: "download",
-        name: "FileDownload",
-        component: () =>
-          import("../views/fileViews/FileDownload.vue")
-      },
-      {
         path: "upload",
         name: "FileUpload",
         component: () =>

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="新闻标题">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form-item label="新闻标题" prop="newsHeadline">
         <el-input v-model="form.newsHeadline"></el-input>
       </el-form-item>
-      <el-form-item label="新闻内容">
+      <el-form-item label="新闻内容" prop="newsContent">
         <el-input type="textarea" v-model="form.newsContent"></el-input>
       </el-form-item>
-      <el-form-item label="相关领域" prop="newsPatentArea">
-        <el-select v-model="form.newsPatentArea" placeholder="请选择">
+      <el-form-item label="相关领域" prop="newsArea">
+        <el-select v-model="form.newsArea" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -17,7 +17,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="新闻时间">
+      <el-form-item label="新闻时间" prop="newsDate">
         <el-date-picker
           v-model="form.newsDate"
           align="right"
@@ -27,12 +27,15 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">增加</el-button>
+        <el-button type="primary" @click="newsAdd">增加</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+//引入axios的qs模块
+import qs from "qs";
+
 export default {
   name: "newsAdd",
   data() {
@@ -40,40 +43,54 @@ export default {
       form: {
         newsHeadline: "",
         newsContent: "",
-        newsPatentArea: "",
+        newsArea: "",
         newsDate: ""
+      },
+      rules: {
+        newsHeadline: [
+          { required: true, message: "新闻标题不能为空", trigger: "blur" }
+        ],
+        newsContent: [
+          { required: true, message: "新闻内容不能为空", trigger: "blur" }
+        ],
+        newsArea: [
+          { required: true, message: "新闻专业领域不能为空", trigger: "blur" }
+        ],
+        newsDate: [
+          { required: true, message: "新闻日期不能为空", trigger: "blur" }
+        ]
       },
       options: [
         {
-          value: "A",
+          value: "人类生活需要",
           label: "人类生活需要"
         },
         {
-          value: "B",
+          value: "作业运输",
           label: "作业运输"
         },
         {
-          value: "C",
+          value: "化学冶金",
           label: "化学冶金"
         },
         {
-          value: "D",
+          value: "纺织造纸",
           label: "纺织造纸"
         },
         {
-          value: "E",
+          value: "固定建筑物",
           label: "固定建筑物"
         },
         {
-          value: "F",
+          value: "机械工程",
           label: "机械工程"
         },
         {
-          value: "G",
+          value: "物理",
           label: "物理"
         },
         {
-          value: "H",
+          value: "电学",
           label: "电学"
         }
       ],
@@ -109,7 +126,55 @@ export default {
     };
   },
   methods: {
-    onSubmit() {}
+    newsAdd() {
+      console.log(this.form.newsDate);
+      if (
+        this.form.newsHeadline &&
+        this.form.newsContent &&
+        this.form.newsArea &&
+        this.form.newsDate
+      ) {
+        let url = "http://localhost:3000/manage/newsAdd";
+        let token = localStorage.getItem("PFUToken");
+        token = JSON.parse(token).token;
+        let data = {
+          token,
+          newsHeadline: this.form.newsHeadline,
+          newsContent: this.form.newsContent,
+          newsArea: this.form.newsArea,
+          newsDate: this.form.newsDate
+        };
+        this.$http({
+          method: "post",
+          url,
+          data: qs.stringify(data)
+        }).then(res => {
+          let PFUNews = res.data;
+          if (PFUNews.err == 0) {
+            this.$message({
+              message: "新闻添加成功",
+              type: "success"
+            });
+          } else if (PFUNews.err == -1) {
+            this.$message({
+              message: "用户未登录",
+              type: "warning"
+            });
+          } else if (PFUNews.err == -2) {
+            this.$message.error("用户不存在");
+          } else if (PFUNews.err == -3) {
+            this.$message.error("权限不足");
+          } else {
+            this.$message.error("服务器出错，请稍后再试");
+          }
+        });
+      } else {
+        this.$message({
+          message: "请正确输入相关信息",
+          type: "warning"
+        });
+      }
+    }
   }
 };
 </script>

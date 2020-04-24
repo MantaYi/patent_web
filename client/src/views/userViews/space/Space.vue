@@ -29,7 +29,7 @@ export default {
 <style lang="less" scoped>
 .space {
   width: 100%;
-  height: 1000px;
+  min-height: 1000px;
   background-color: #f4f5f7;
 
   .nav {

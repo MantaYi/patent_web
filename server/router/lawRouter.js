@@ -24,8 +24,8 @@ router.get('/search', (req, res) => {
 })
 
 //法规按领域查找searchByArea
-router.get('/searchByArea', (req, res) => {
-  let lawArea = req.query.lawArea;
+router.post('/searchByArea', (req, res) => {
+  let lawArea = req.body.lawArea;
   Law.find({
     lawArea
   }).then(data => {
@@ -43,8 +43,8 @@ router.get('/searchByArea', (req, res) => {
 })
 
 //法规按类型查找searchByType
-router.get('/searchByType', (req, res) => {
-  let lawPatentType = req.query.lawPatentType;
+router.post('/searchByType', (req, res) => {
+  let lawPatentType = req.body.lawPatentType;
   Law.find({
     lawPatentType
   }).then(data => {
@@ -62,8 +62,8 @@ router.get('/searchByType', (req, res) => {
 })
 
 //法规按关键词查找searchByKeyword
-router.get('/searchByKeyword', (req, res) => {
-  let keyword = req.query.keyword;
+router.post('/searchByKeyword', (req, res) => {
+  let keyword = req.body.keyword;
   let regExp = new RegExp(`${keyword}`);
   Law.find({
     lawContent: regExp

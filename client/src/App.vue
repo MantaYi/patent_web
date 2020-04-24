@@ -5,7 +5,6 @@
     <footer-component></footer-component>
   </div>
 </template>
-
 <script>
 import HeaderComponent from "./component/HeaderComponent";
 import FooterComponent from "./component/FooterComponent";
@@ -18,7 +17,6 @@ export default {
   }
 };
 </script>
-
 <style>
 #app {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
